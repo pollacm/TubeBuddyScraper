@@ -77,6 +77,13 @@ namespace TubeBuddyScraper
 
             //tubebuddy analysis
             driver.Navigate().GoToUrl($"https://www.youtube.com");
+            driver.FindElement(By.XPath("//button[@id='tb-main-menu']")).Click();
+            driver.FindElement(By.XPath("//li[contains(text(),'Keyword Explorer')]")).Click();
+            var searchbox = driver.FindElement(By.XPath("//input[@id='tb-tag-explorer-input']"));
+            searchbox.SendKeys("test");
+
+            driver.FindElement(By.XPath("//button[@id='tb-tag-explorer-explore']")).Click();
+
             //driver.SwitchTo().Frame("disneyid-iframe");
             var userNameBox = driver.FindElement(By.CssSelector("div.field-username-email input"));
             userNameBox.SendKeys(Keys.ArrowDown);
