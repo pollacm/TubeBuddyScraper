@@ -6,6 +6,7 @@ using System.Threading;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using TubeBuddyScraper.PlayerComparer;
 using TubeBuddyScraper.PowerRankings;
@@ -27,14 +28,26 @@ namespace TubeBuddyScraper
 
         private static void Main(string[] args)
         {
-            var options = new ChromeOptions();
-            //options.AddArgument("--headless");
-            var driver = new ChromeDriver(options);
+            //String pathToExtension = "C:\\Users\\cxp6696\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\mhkhmbddkmdggbhaaaodilponhnccicb\\1.45.700_0";
+            String pathToProfile = @"C:\Users\cxp6696\ChromeProfiles\User Data";
+            string pathToChromedriver = @"C:\Users\cxp6696\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
 
-            //new ReturnerBuilder(driver).GenerateReturners();
+            ChromeOptions options = new ChromeOptions();
+            //options.AddArguments("--load-extension=" +pathToExtension);
+            options.AddArguments("user-data-dir=" + pathToProfile);
+            //options.AddArguments("profile-directory=Profile 1");
+            //options.AddArgument("-no-sandbox");
+            Environment.SetEnvironmentVariable("webdriver.chrome.driver", pathToChromedriver);
+            ChromeDriver driver = null;
+            try
+            {
+                driver = new ChromeDriver(options);
+            }
+            catch (Exception e)
+            {
 
-            //login
-
+            }
+            
             //itch popular
             //https://itch.io/games/tag-horror
             //itch new and popular
@@ -63,12 +76,8 @@ namespace TubeBuddyScraper
 
 
             //tubebuddy analysis
-
-
-
-
-            driver.Navigate().GoToUrl($"http://games.espn.com/ffl/standings?leagueId=127291&seasonId={year}");
-            driver.SwitchTo().Frame("disneyid-iframe");
+            driver.Navigate().GoToUrl($"https://www.youtube.com");
+            //driver.SwitchTo().Frame("disneyid-iframe");
             var userNameBox = driver.FindElement(By.CssSelector("div.field-username-email input"));
             userNameBox.SendKeys(Keys.ArrowDown);
             userNameBox.SendKeys("pollacm@gmail.com");

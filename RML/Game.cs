@@ -14,10 +14,10 @@ namespace TubeBuddyScraper
         public string Description { get; set; }
         public DateTime? DateReleased { get; set; }
         public DateTime? DateChecked { get; set; }
-        public GameSite Site { get; set; }//(itch, gamejolt, metacritic)
+        public GameSite Site { get; set; }
         public GameSystem Platform { get; set; }
         public decimal? Price { get; set; }
-        public GameType Type { get; set; }//(Recent, Popular, New and Popular)
+        public GameType Type { get; set; }
         public string GameUrl { get; set; }
         public GameGenre Genre { get; set; }
         public string ThumbnailUrl { get; set; }
@@ -34,6 +34,7 @@ namespace TubeBuddyScraper
         {
             PS4,
             PC,
+            Online,
             IOS,
             Android
         }
