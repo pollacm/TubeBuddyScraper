@@ -8,6 +8,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
+using TubeBuddyScraper.Android;
 using TubeBuddyScraper.GameJolt;
 using TubeBuddyScraper.Itch;
 using TubeBuddyScraper.Metacritic;
@@ -34,42 +35,17 @@ namespace TubeBuddyScraper
             var games = new List<Game>();
             ChromeDriver driver = new ChromeDriver(options);
 
-            //finished
-            //var itchParser = new ItchParser(driver, maxGameSize);
-            //games = itchParser.GetGames();
+            var itchParser = new ItchParser(driver, maxGameSize);
+            games = itchParser.GetGames();
 
-            //itch popular
-            //https://itch.io/games/tag-horror
-            //itch new and popular
-            //https://itch.io/games/new-and-popular/tag-horror
-            //itch most recent
-            //https://itch.io/games/newest/tag-horror
+            var gameJoltParser = new GameJoltParser(driver, maxGameSize);
+            games.AddRange(gameJoltParser.GetGames());
 
-            //gamejolt hot (popular)
-            //https://gamejolt.com/games/tag-horror
-            //gamejolt new (recent)
-            //https://gamejolt.com/games/new/tag-horror
-            //gamejolt featured (new and popular)
-            //https://gamejolt.com/games/featured/tag-horror
+            var metacriticParser = new MetacriticParser(driver, maxGameSize);
+            games.AddRange(metacriticParser.GetGames());
 
-            //var gameJoltParser = new GameJoltParser(driver, maxGameSize);
-            //games.AddRange(gameJoltParser.GetGames());
-
-            //var metacriticParser = new MetacriticParser(driver, maxGameSize);
-            //games.AddRange(metacriticParser.GetGames());
-
-            //metacritic ps4
-            //https://www.metacritic.com/browse/games/release-date/new-releases/ps4/date
-            //metacritic pc
-            //https://www.metacritic.com/browse/games/release-date/new-releases/pc/date
-            //metacritic ios
-            //https://www.metacritic.com/browse/games/release-date/new-releases/ios/date
-
-            //android new free
-            //https://play.google.com/store/apps/new/category/GAME?hl=en_US
-            //android new paid
-            //https://play.google.com/store/apps/new/category/GAME?hl=en_US
-
+            var androidParser = new AndroidParser(driver, maxGameSize);
+            games.AddRange(androidParser.GetGames());
 
             //tubebuddy analysis
             driver.Navigate().GoToUrl($"https://www.youtube.com");
