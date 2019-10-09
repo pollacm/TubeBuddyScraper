@@ -16,10 +16,10 @@ namespace TubeBuddyScraper
         public DateTime? DateChecked { get; set; }
         public GameSite Site { get; set; }
         public GameSystem Platform { get; set; }
-        public decimal? Price { get; set; }
+        public string Price { get; set; }
         public GameType Type { get; set; }
         public string GameUrl { get; set; }
-        public GameGenre Genre { get; set; }
+        public string Genre { get; set; }
         public string ThumbnailUrl { get; set; }
         public int     TubebuddyScore { get; set; }
         public string TubebuddyGrade { get; set; }
@@ -54,10 +54,10 @@ namespace TubeBuddyScraper
             NewAndPopular
         }
 
-        public enum GameGenre
-        {
-            Horror,
-            Other
-        }
+        //public enum GameGenre
+        //{
+        //    Horror,
+        //    Other
+        //}
     }
 }

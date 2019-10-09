@@ -54,69 +54,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game.cs" />
+    <Compile Include="Android\AndroidParser.cs" />
+    <Compile Include="GameJolt\GameJoltParser.cs" />
+    <Compile Include="Games\Game.cs" />
     <Compile Include="Itch\ItchParser.cs" />
-    <Compile Include="PlayerComparer\PlayerConstants.cs" />
-    <Compile Include="PlayerComparer\PrintPlayerComparerService.cs" />
-    <Compile Include="PlayerComparer\PlayerComparerHelper.cs" />
-    <Compile Include="Rankings\PostDraftRanking.cs" />
-    <Compile Include="Rankings\PrintPostDraftRankingsService.cs" />
-    <Compile Include="Rankings\Ranking.cs" />
-    <Compile Include="Rankings\PostDraftRankingsGenerator.cs" />
-    <Compile Include="Rankings\RankingGenerator.cs" />
-    <Compile Include="SiteCodes\SiteCodeHelper.cs" />
-    <Compile Include="SitePlayer\SitePlayerRepository.cs" />
-    <Compile Include="SitePlayer\SitePlayer.cs" />
-    <Compile Include="RmlPlayer\RmlPlayer.cs" />
-    <Compile Include="RmlPlayer\RmlPlayerBuilder.cs" />
+    <Compile Include="Metacritic\MetacriticParser.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="PlayerOfTheWeek.cs" />
-    <Compile Include="PowerRankings\PowerRanking.cs" />
-    <Compile Include="PowerRankings\PowerRankingGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Returners\PrintReturnerService.cs" />
-    <Compile Include="Returners\Returner.cs" />
-    <Compile Include="Returners\ReturnerBuilder.cs" />
-    <Compile Include="RmlPlayer\RmlPlayerRepository.cs" />
-    <Compile Include="SiteCodes\SiteCode.cs" />
-    <Compile Include="Standings\Standing.cs" />
-    <Compile Include="Standings\StandingsGenerator.cs" />
-    <Compile Include="Teams\TeamRepository.cs" />
-    <Compile Include="Teams\TeamBuilder.cs" />
-    <Compile Include="Trophies\NfcDivisionChampionshipTrophy.cs" />
-    <Compile Include="Trophies\AfcDivisionChampionshipTrophy.cs" />
-    <Compile Include="Trophies\HighestScoringSeasonTrophy.cs" />
-    <Compile Include="Trophies\BottomRankedSeasonTrophy.cs" />
-    <Compile Include="Trophies\DefensivePlayerOfTheYearTrophy.cs" />
-    <Compile Include="Trophies\OffensivePlayerOfTheYearTrophy.cs" />
-    <Compile Include="Trophies\TopRankedSeasonTrophy.cs" />
-    <Compile Include="Trophies\DefensivePlayerOfTheWeekTrophy.cs" />
-    <Compile Include="Trophies\OffensivePlayerOfTheWeekTrophy.cs" />
-    <Compile Include="Trophies\LoserOfTheWeekTrophy.cs" />
-    <Compile Include="Trophies\BallerOfTheWeekTrophy.cs" />
-    <Compile Include="Trophies\SevenHundredClubTrophy.cs" />
-    <Compile Include="Trophies\SixHundredClubTrophy.cs" />
-    <Compile Include="Trophies\FiveHundredClubTrophy.cs" />
-    <Compile Include="Trophies\ITrophy.cs" />
-    <Compile Include="Trophies\TrophyAssigner.cs" />
-    <Compile Include="Trophies\TrophyWriter.cs" />
-    <Compile Include="Weeks\Score.cs" />
-    <Compile Include="SitePlayer\SitePlayerBuilder.cs" />
-    <Compile Include="Teams\Team.cs" />
-    <Compile Include="Trophies\TrophyConstants.cs" />
-    <Compile Include="Trophies\Trophy.cs" />
-    <Compile Include="Weeks\WeekRepository.cs" />
-    <Compile Include="Weeks\WeekBuilder.cs" />
-    <Compile Include="Weeks\Week.cs" />
+    <Compile Include="Games\RmlPlayerRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="games.json" />
     <None Include="rmlPlayers.json" />
-    <None Include="sitePlayers.json" />
-    <None Include="teams.json" />
-    <None Include="weeks.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Notes.txt" />

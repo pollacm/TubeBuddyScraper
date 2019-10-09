@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
-namespace TubeBuddyScraper.Itch
+namespace TubeBuddyScraper.GameJolt
 {
-    public class ItchParser
+    public class GameJoltParser
     {
         private readonly ChromeDriver _driver;
-        private string ItchPopularUrl = "https://itch.io/games/tag-horror";
-        private string ItchNewAndPopularUrl = "https://itch.io/games/new-and-popular/tag-horror";
-        private string ItchRecentUrl = "https://itch.io/games/newest/tag-horror";
+        private string GameJoltPopularUrl = "https://gamejolt.com/games/tag-horror";
+        private string GameJoltNewAndPopularUrl = "https://gamejolt.com/games/featured/tag-horror";
+        private string GameJoltRecentUrl = "https://gamejolt.com/games/new/tag-horror";
 
-        public ItchParser(ChromeDriver driver)
+        public GameJoltParser(ChromeDriver driver)
         {
             _driver = driver;
         }
@@ -24,9 +24,9 @@ namespace TubeBuddyScraper.Itch
         public List<Game> GetGames()
         {
             var games = new List<Game>();
-            games.AddRange(BuildGamesByUrl(ItchPopularUrl, Game.GameType.Popular));
-            games.AddRange(BuildGamesByUrl(ItchNewAndPopularUrl, Game.GameType.NewAndPopular));
-            games.AddRange(BuildGamesByUrl(ItchRecentUrl, Game.GameType.Recent));
+            games.AddRange(BuildGamesByUrl(GameJoltPopularUrl, Game.GameType.Popular));
+            games.AddRange(BuildGamesByUrl(GameJoltNewAndPopularUrl, Game.GameType.NewAndPopular));
+            games.AddRange(BuildGamesByUrl(GameJoltRecentUrl, Game.GameType.Recent));
 
             return games;
         }

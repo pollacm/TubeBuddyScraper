@@ -6,15 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace TubeBuddyScraper.SitePlayer
+namespace TubeBuddyScraper.Games
 {
-    public class SitePlayerRepository
+    public class GameRepository
     {
-        private readonly string jsonFile = "../../sitePlayers.json";
+        private readonly string jsonFile = "../../games.json";
 
-        public void RefreshSitePlayers(List<SitePlayer> sitePlayers)
+        public void RefreshGames(List<Game> games)
         {
-            var json = JsonConvert.SerializeObject(sitePlayers);
+            var json = JsonConvert.SerializeObject(games);
 
             using (StreamWriter file = new StreamWriter(jsonFile))
             {
@@ -22,12 +22,12 @@ namespace TubeBuddyScraper.SitePlayer
             }
         }
 
-        public List<SitePlayer> GetSitePlayers()
+        public List<Game> GetGames()
         {
             using (StreamReader file = new StreamReader(jsonFile))
             {
                 var json = file.ReadToEnd();
-                return JsonConvert.DeserializeObject<List<SitePlayer>>(json);
+                return JsonConvert.DeserializeObject<List<Game>>(json);
             }
         }
     }
