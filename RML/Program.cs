@@ -8,22 +8,21 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
+using TubeBuddyScraper.GameJolt;
 using TubeBuddyScraper.Itch;
 
 namespace TubeBuddyScraper
 {
     internal class Program
     {
-        private static readonly int year = 2018;
-        private static readonly int week = 11;
+        private static readonly int maxGameSize = 30;
 
         private static void Main(string[] args)
         {
-            //String pathToExtension = "C:\\Users\\cxp6696\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\mhkhmbddkmdggbhaaaodilponhnccicb\\1.45.700_0";
-            //String pathToProfile = @"C:\Users\cxp6696\ChromeProfiles\User Data";
-            String pathToProfile = @"C:\Users\Owner\ChromeProfiles\User Data";
-            //string pathToChromedriver = @"C:\Users\cxp6696\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
-            string pathToChromedriver = @"C:\Users\Owner\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
+            String pathToProfile = @"C:\Users\cxp6696\ChromeProfiles\User Data";
+            //String pathToProfile = @"C:\Users\Owner\ChromeProfiles\User Data";
+            string pathToChromedriver = @"C:\Users\cxp6696\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
+            //string pathToChromedriver = @"C:\Users\Owner\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
 
             ChromeOptions options = new ChromeOptions();
             //options.AddArguments("--load-extension=" +pathToExtension);
@@ -31,19 +30,12 @@ namespace TubeBuddyScraper
             //options.AddArguments("profile-directory=Profile 1");
             //options.AddArgument("-no-sandbox");
             Environment.SetEnvironmentVariable("webdriver.chrome.driver", pathToChromedriver);
-            ChromeDriver driver = null;
-            try
-            {
-                driver = new ChromeDriver(options);
-            }
-            catch (Exception e)
-            {
-
-            }
+            var games = new List<Game>();
+            ChromeDriver driver = new ChromeDriver(options);
 
             //finished
-            //var itchParser = new ItchParser(driver);
-            //var games = itchParser.GetGames();
+            //var itchParser = new ItchParser(driver, maxGameSize);
+            //games = itchParser.GetGames();
 
             //itch popular
             //https://itch.io/games/tag-horror
@@ -58,6 +50,9 @@ namespace TubeBuddyScraper
             //https://gamejolt.com/games/new/tag-horror
             //gamejolt featured (new and popular)
             //https://gamejolt.com/games/featured/tag-horror
+
+            var gameJoltParser = new GameJoltParser(driver, maxGameSize);
+            games.AddRange(gameJoltParser.GetGames());
 
             //metacritic ps4
             //https://www.metacritic.com/browse/games/release-date/new-releases/ps4/date

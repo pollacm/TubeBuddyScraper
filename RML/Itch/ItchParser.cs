@@ -12,13 +12,15 @@ namespace TubeBuddyScraper.Itch
     public class ItchParser
     {
         private readonly ChromeDriver _driver;
+        private readonly int _maxGameSize;
         private string ItchPopularUrl = "https://itch.io/games/tag-horror";
         private string ItchNewAndPopularUrl = "https://itch.io/games/new-and-popular/tag-horror";
         private string ItchRecentUrl = "https://itch.io/games/newest/tag-horror";
 
-        public ItchParser(ChromeDriver driver)
+        public ItchParser(ChromeDriver driver, int maxGameSize)
         {
             _driver = driver;
+            _maxGameSize = maxGameSize;
         }
 
         public List<Game> GetGames()
@@ -35,7 +37,7 @@ namespace TubeBuddyScraper.Itch
         {
             var games = new List<Game>();
             int pageNumber = 1;
-            while (games.Count < 90)
+            while (games.Count < _maxGameSize)
             {
                 _driver.NavigateToUrl(url + "?page=" + pageNumber);
                 var gameCells = _driver.FindElements(By.XPath("//div[@class='game_grid_widget browse_game_grid']/div[contains(@class,'game_cell')]"));

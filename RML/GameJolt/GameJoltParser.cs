@@ -12,13 +12,15 @@ namespace TubeBuddyScraper.GameJolt
     public class GameJoltParser
     {
         private readonly ChromeDriver _driver;
+        private readonly int _maxGameSize;
         private string GameJoltPopularUrl = "https://gamejolt.com/games/tag-horror";
         private string GameJoltNewAndPopularUrl = "https://gamejolt.com/games/featured/tag-horror";
         private string GameJoltRecentUrl = "https://gamejolt.com/games/new/tag-horror";
 
-        public GameJoltParser(ChromeDriver driver)
+        public GameJoltParser(ChromeDriver driver, int maxGameSize)
         {
             _driver = driver;
+            _maxGameSize = maxGameSize;
         }
 
         public List<Game> GetGames()
@@ -35,39 +37,41 @@ namespace TubeBuddyScraper.GameJolt
         {
             var games = new List<Game>();
             int pageNumber = 1;
-            while (games.Count < 90)
+            while (games.Count < _maxGameSize)
             {
                 _driver.NavigateToUrl(url + "?page=" + pageNumber);
-                var gameCells = _driver.FindElements(By.XPath("//div[@class='game_grid_widget browse_game_grid']/div[contains(@class,'game_cell')]"));
+                var gameCells = _driver.FindElements(By.XPath("//div[@class='game-grid-item']"));
                 foreach (var gameCell in gameCells)
                 {
                     var game = new Game();
                     
-                    var title = gameCell.FindElement(By.XPath("./div[@class='game_cell_data']/div[@class='game_title']/a"));
+                    var title = gameCell.FindElement(By.XPath("./a/div/div[@class='-meta']/div[@class='-title']"));
                     game.Title = title.Text;
-                    game.GameUrl = title.GetAttribute("href");
+
+                    var gameUrl = gameCell.FindElement(By.XPath("./a")).GetAttribute("href");
+                    game.GameUrl = gameUrl;
                     
-                    var description = gameCell.FindElements(By.XPath("./div[@class='game_cell_data']/div[@class='game_text']"));
-                    if (description.Any())
-                        game.Description = description.First().Text;
+                    //var description = gameCell.FindElements(By.XPath("./div[@class='game_cell_data']/div[@class='game_text']"));
+                    //if (description.Any())
+                    //    game.Description = description.First().Text;
 
                     game.Genre = "Horror";
-                    var genre = gameCell.FindElements(By.XPath("./div[@class='game_cell_data']/div[@class='game_genre']"));
-                    if (genre.Any())
-                        game.Genre += $"; {genre.First().Text}";
+                    //var genre = gameCell.FindElements(By.XPath("./div[@class='game_cell_data']/div[@class='game_genre']"));
+                    //if (genre.Any())
+                    //    game.Genre += $"; {genre.First().Text}";
                     game.DateChecked = DateTime.Now;
 
-                    game.Site = Game.GameSite.Itch;
+                    game.Site = Game.GameSite.GameJolt;
                     game.Platform = Game.GameSystem.Online;
                     game.Type = type;
 
-                    var price = gameCell.FindElements(By.XPath("./div[@class='game_cell_data']/div[@class='game_title']/a/div[@class='price_value']"));
+                    var price = gameCell.FindElements(By.XPath("./a/div/div[@class='-meta']/div[contains(@class, '-pricing')]/span/span"));
                     if (price.Any())
-                        game.Price = price.First().Text;
+                        game.Price = price.First().Text == "FREE" || price.First().Text == "NAME YOUR PRICE" ? "" : price.First().Text;
 
-                    var thumbnail = gameCell.FindElements(By.XPath("./a[contains(@class,'thumb_link')]/div[@class='game_thumb']"));
+                    var thumbnail = gameCell.FindElements(By.XPath("./a/div/div[contains(@class, 'game-thumbnail-img')]/div[@class='-inner']/div[@class='-media']/img"));
                     if (thumbnail.Any())
-                        game.ThumbnailUrl = thumbnail.First().GetAttribute("data-background_image");
+                        game.ThumbnailUrl = thumbnail.First().GetAttribute("src");
                     games.Add(game);
                 }
 
