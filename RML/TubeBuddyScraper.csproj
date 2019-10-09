@@ -57,12 +57,14 @@
     <Compile Include="Android\AndroidParser.cs" />
     <Compile Include="GameJolt\GameJoltParser.cs" />
     <Compile Include="Games\Game.cs" />
+    <Compile Include="GameWriter\Writer.cs" />
     <Compile Include="Itch\ItchParser.cs" />
     <Compile Include="Metacritic\MetacriticParser.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Games\RmlPlayerRepository.cs" />
+    <Compile Include="TubeBuddyAnalyzer\Analyzer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

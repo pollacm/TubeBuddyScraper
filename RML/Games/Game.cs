@@ -9,6 +9,10 @@ namespace TubeBuddyScraper
 {
     public class Game
     {
+        public Game()
+        {
+            TubebuddyRelatedSearches = new List<string>();
+        }
         public string Title { get; set; }
         public string Keyword { get; set; }//(base, base + game, base + gameplay, base + horror, base + base + lets play,...)
         public string Description { get; set; }
@@ -27,9 +31,12 @@ namespace TubeBuddyScraper
         public string TubebuddySearchVolume { get; set; }
         public string TubebuddyCompetitionScore { get; set; }
         public string TubebuddyOptimizationScore { get; set; }
-        public decimal TubebuddyAverageViews { get; set; }
-        public decimal TubebuddyTargetViews { get; set; }
-        public decimal TubebuddyMyAverageViews { get; set; }
+        public string TubebuddyAverageViews { get; set; }
+        public string TubebuddyTargetViews { get; set; }
+        public string TubebuddyMyAverageViews { get; set; }
+        public string TubebuddyNumberOfVideos { get; set; }
+        public string TubebuddySearchesPerMonth { get; set; }
+        public List<string> TubebuddyRelatedSearches { get; set; }
 
         public enum GameSystem
         {

@@ -12,6 +12,7 @@ using TubeBuddyScraper.Android;
 using TubeBuddyScraper.GameJolt;
 using TubeBuddyScraper.Itch;
 using TubeBuddyScraper.Metacritic;
+using TubeBuddyScraper.TubeBuddyAnalyzer;
 
 namespace TubeBuddyScraper
 {
@@ -38,30 +39,17 @@ namespace TubeBuddyScraper
             var itchParser = new ItchParser(driver, maxGameSize);
             games = itchParser.GetGames();
 
-            var gameJoltParser = new GameJoltParser(driver, maxGameSize);
-            games.AddRange(gameJoltParser.GetGames());
+            //var gameJoltParser = new GameJoltParser(driver, maxGameSize);
+            //games.AddRange(gameJoltParser.GetGames());
 
-            var metacriticParser = new MetacriticParser(driver, maxGameSize);
-            games.AddRange(metacriticParser.GetGames());
+            //var metacriticParser = new MetacriticParser(driver, maxGameSize);
+            //games.AddRange(metacriticParser.GetGames());
 
-            var androidParser = new AndroidParser(driver, maxGameSize);
-            games.AddRange(androidParser.GetGames());
+            //var androidParser = new AndroidParser(driver, maxGameSize);
+            //games.AddRange(androidParser.GetGames());
 
-            //tubebuddy analysis
-            driver.Navigate().GoToUrl($"https://www.youtube.com");
-            driver.FindElement(By.XPath("//button[@id='tb-main-menu']")).Click();
-            driver.FindElement(By.XPath("//li[contains(text(),'Keyword Explorer')]")).Click();
-
-            //foreach (var game in games)
-            //{
-
-            //}
-
-
-            var searchbox = driver.FindElement(By.XPath("//input[@id='tb-tag-explorer-input']"));
-            searchbox.SendKeys("test");
-
-            driver.FindElement(By.XPath("//button[@id='tb-tag-explorer-explore']")).Click();
+            var analyzer = new Analyzer(driver, games);
+            games = analyzer.Analyze();
         }
     }
 }
