@@ -12,13 +12,15 @@ namespace TubeBuddyScraper.Metacritic
     public class MetacriticParser
     {
         private readonly ChromeDriver _driver;
+        private readonly int _maxGameSize;
         private string MetacriticPS4Url = "https://www.metacritic.com/browse/games/release-date/new-releases/ps4/date";
         private string MetacriticPCUrl = "https://www.metacritic.com/browse/games/release-date/new-releases/pc/date";
         private string MetacriticIOSUrl = "https://www.metacritic.com/browse/games/release-date/new-releases/ios/date";
 
-        public MetacriticParser(ChromeDriver driver)
+        public MetacriticParser(ChromeDriver driver, int maxGameSize)
         {
             _driver = driver;
+            _maxGameSize = maxGameSize;
         }
 
         public List<Game> GetGames()
@@ -34,43 +36,36 @@ namespace TubeBuddyScraper.Metacritic
         private List<Game> BuildGamesByUrl(string url, Game.GameSystem platform)
         {
             var games = new List<Game>();
-            int pageNumber = 1;
-            while (games.Count < 90)
+
+            _driver.NavigateToUrl(url);
+            var gameCells = _driver.FindElements(By.XPath("//div[@class='product_condensed']/ol/li"));
+            foreach (var gameCell in gameCells)
             {
-                _driver.NavigateToUrl(url + "?page=" + pageNumber);
-                var gameCells = _driver.FindElements(By.XPath("//div[@class='game_grid_widget browse_game_grid']/div[contains(@class,'game_cell')]"));
-                foreach (var gameCell in gameCells)
+                var game = new Game();
+                
+                var title = gameCell.FindElement(By.XPath("./div[@class='product_wrap']/div[contains(@class,'product_title')]/a"));
+                game.Title = title.Text;
+                game.GameUrl = title.GetAttribute("href");
+
+                game.DateChecked = DateTime.Now;
+
+                var releaseDate = gameCell.FindElement(By.XPath("./div[@class='product_wrap']/div[contains(@class, 'condensed_stats')]/ul/li[contains(@class, 'release_date')]/span[@class='data']"));
+                game.DateReleased = releaseDate.Text;
+
+                var score = gameCell.FindElement(By.XPath("./div[contains(@class, 'product_wrap')]/div[contains(@class, 'product_score')]/div"));
+                game.Score = score.Text == "tbd" ? "" : score.Text;
+
+                game.Site = Game.GameSite.Metacritic;
+                game.Platform = platform;
+                games.Add(game);
+
+                if (games.Count >= _maxGameSize)
+                    break;
+
+                if (DateTime.Compare(DateTime.Now.AddDays(-30), DateTime.Parse(game.DateReleased)) == 1)
                 {
-                    var game = new Game();
-                    
-                    var title = gameCell.FindElement(By.XPath("./div[@class='game_cell_data']/div[@class='game_title']/a"));
-                    game.Title = title.Text;
-                    game.GameUrl = title.GetAttribute("href");
-                    
-                    var description = gameCell.FindElements(By.XPath("./div[@class='game_cell_data']/div[@class='game_text']"));
-                    if (description.Any())
-                        game.Description = description.First().Text;
-
-                    game.Genre = "Horror";
-                    var genre = gameCell.FindElements(By.XPath("./div[@class='game_cell_data']/div[@class='game_genre']"));
-                    if (genre.Any())
-                        game.Genre += $"; {genre.First().Text}";
-                    game.DateChecked = DateTime.Now;
-
-                    game.Site = Game.GameSite.Itch;
-                    game.Platform = platform;
-
-                    var price = gameCell.FindElements(By.XPath("./div[@class='game_cell_data']/div[@class='game_title']/a/div[@class='price_value']"));
-                    if (price.Any())
-                        game.Price = price.First().Text;
-
-                    var thumbnail = gameCell.FindElements(By.XPath("./a[contains(@class,'thumb_link')]/div[@class='game_thumb']"));
-                    if (thumbnail.Any())
-                        game.ThumbnailUrl = thumbnail.First().GetAttribute("data-background_image");
-                    games.Add(game);
+                    break;
                 }
-
-                pageNumber++;
             }
 
             return games;

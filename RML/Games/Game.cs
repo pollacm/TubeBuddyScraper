@@ -12,7 +12,7 @@ namespace TubeBuddyScraper
         public string Title { get; set; }
         public string Keyword { get; set; }//(base, base + game, base + gameplay, base + horror, base + base + lets play,...)
         public string Description { get; set; }
-        public DateTime? DateReleased { get; set; }
+        public string DateReleased { get; set; }
         public DateTime? DateChecked { get; set; }
         public GameSite Site { get; set; }
         public GameSystem Platform { get; set; }
@@ -21,6 +21,7 @@ namespace TubeBuddyScraper
         public string GameUrl { get; set; }
         public string Genre { get; set; }
         public string ThumbnailUrl { get; set; }
+        public string Score { get; set; }
         public int     TubebuddyScore { get; set; }
         public string TubebuddyGrade { get; set; }
         public string TubebuddySearchVolume { get; set; }

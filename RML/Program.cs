@@ -10,6 +10,7 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using TubeBuddyScraper.GameJolt;
 using TubeBuddyScraper.Itch;
+using TubeBuddyScraper.Metacritic;
 
 namespace TubeBuddyScraper
 {
@@ -51,8 +52,11 @@ namespace TubeBuddyScraper
             //gamejolt featured (new and popular)
             //https://gamejolt.com/games/featured/tag-horror
 
-            var gameJoltParser = new GameJoltParser(driver, maxGameSize);
-            games.AddRange(gameJoltParser.GetGames());
+            //var gameJoltParser = new GameJoltParser(driver, maxGameSize);
+            //games.AddRange(gameJoltParser.GetGames());
+
+            //var metacriticParser = new MetacriticParser(driver, maxGameSize);
+            //games.AddRange(metacriticParser.GetGames());
 
             //metacritic ps4
             //https://www.metacritic.com/browse/games/release-date/new-releases/ps4/date
