@@ -47,6 +47,7 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
             {
                 var searchbox = _driver.FindElement(By.XPath("//input[@id='tb-tag-explorer-input']"));
                 //include game in first search
+                searchbox.Clear();
                 searchbox.SendKeys(game.Title + " game");
                 _driver.FindElement(By.XPath("//button[@id='tb-tag-explorer-explore']")).Click();
 
@@ -54,15 +55,15 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
 
                 game.TubebuddyGrade = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-total-score-label']")).Text;
                 game.TubebuddyScore = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-total-score']")).Text;
+
                 //115-0 - Closer to 0 the better 115-92 - red; 92-69 - orange; 69-46 - yellow; 46-23 light-green; 23-0 - green
-                
                 var arrowSelectors = _driver.FindElements(By.CssSelector("svg.highcharts-root g.highcharts-series-group g.highcharts-markers image"));
 
                 game.TubebuddySearchVolume = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-search-volume']")).Text;
                 game.TubebuddySearchVolumeExact = arrowSelectors[0].GetAttribute("y");
 
                 game.TubebuddyCompetitionScore = _driver.FindElement(By.XPath("//span[@id='tb-tag-weighted-competition']")).Text;
-                game.TubebuddyCompetitionScoreExact = arrowSelectors[2].GetAttribute("y");
+                game.TubebuddyCompetitionScoreExact = arrowSelectors[1].GetAttribute("y");
 
                 game.TubebuddyOptimizationScore = _driver.FindElement(By.XPath("//span[@class='tb-tag-explorer-chart-label tb-tag-explorer-keyword-count']")).Text;
                 game.TubebuddyOptimizationScoreExact = arrowSelectors[3].GetAttribute("y");
@@ -79,7 +80,8 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
                 var relatedSearches = _driver.FindElements(By.XPath("//div[@class='tb-tag-explorer-related-keyword-tab-youtube-list']/div"));
                 foreach (var relatedSearch in relatedSearches)
                 {
-                    game.TubebuddyRelatedSearches.Add(relatedSearch.FindElement(By.XPath("./a")).Text);
+                    if(!relatedSearch.Text.Contains("No related video"))
+                        game.TubebuddyRelatedSearches.Add(relatedSearch.FindElement(By.XPath("./a")).Text);
                 }
 
                 game.Keyword = game.Title;
@@ -88,7 +90,7 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
                 {
                     var relatedGame = new Game();
                     relatedGame.Title = game.Title;
-                    relatedGame.Keyword = game.Title + relatedSearch;
+                    relatedGame.Keyword = relatedSearch;
                     relatedGame.DateChecked = game.DateChecked;
                     relatedGame.DateReleased = game.DateReleased;
                     relatedGame.Description = game.Description;
@@ -101,6 +103,7 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
                     relatedGame.ThumbnailUrl = game.ThumbnailUrl;
                     relatedGame.Type = game.Type;
 
+                    searchbox.Clear();
                     searchbox.SendKeys(relatedGame.Keyword);
                     _driver.FindElement(By.XPath("//button[@id='tb-tag-explorer-explore']")).Click();
 
@@ -134,6 +137,9 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
 
                 foreach (var additionalSearch in _additionalSearches)
                 {
+                    if (game.TubebuddyRelatedSearches.Contains(additionalSearch))
+                        continue;
+
                     var additionalSearchGame = new Game();
                     additionalSearchGame.Title = game.Title;
                     additionalSearchGame.Keyword = game.Title + additionalSearch;
@@ -149,6 +155,7 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
                     additionalSearchGame.ThumbnailUrl = game.ThumbnailUrl;
                     additionalSearchGame.Type = game.Type;
 
+                    searchbox.Clear();
                     searchbox.SendKeys(additionalSearchGame.Keyword);
                     _driver.FindElement(By.XPath("//button[@id='tb-tag-explorer-explore']")).Click();
 

@@ -14,12 +14,14 @@ namespace TubeBuddyScraper.Android
     {
         private readonly ChromeDriver _driver;
         private readonly int _maxGameCount;
+        private readonly List<Game> _existingGames;
         private string AndroidURL = "https://play.google.com/store/apps/new/category/GAME?hl=en_US";
 
-        public AndroidParser(ChromeDriver driver, int maxGameCount)
+        public AndroidParser(ChromeDriver driver, int maxGameCount, List<Game> existingGames)
         {
             _driver = driver;
             _maxGameCount = maxGameCount;
+            _existingGames = existingGames;
         }
 
         public List<Game> GetGames()
@@ -79,7 +81,8 @@ namespace TubeBuddyScraper.Android
                 if (thumbnail.Any())
                     game.ThumbnailUrl = thumbnail.First().GetAttribute("data-src");
 
-                games.Add(game);
+                if(!_existingGames.Any(g => g.Title == game.Title))
+                    games.Add(game);
 
                 if (games.Count >= _maxGameCount)
                 {

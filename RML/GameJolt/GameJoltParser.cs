@@ -13,14 +13,16 @@ namespace TubeBuddyScraper.GameJolt
     {
         private readonly ChromeDriver _driver;
         private readonly int _maxGameSize;
+        private readonly List<Game> _existingGames;
         private string GameJoltPopularUrl = "https://gamejolt.com/games/tag-horror";
         private string GameJoltNewAndPopularUrl = "https://gamejolt.com/games/featured/tag-horror";
         private string GameJoltRecentUrl = "https://gamejolt.com/games/new/tag-horror";
 
-        public GameJoltParser(ChromeDriver driver, int maxGameSize)
+        public GameJoltParser(ChromeDriver driver, int maxGameSize, List<Game> existingGames)
         {
             _driver = driver;
             _maxGameSize = maxGameSize;
+            _existingGames = existingGames;
         }
 
         public List<Game> GetGames()
@@ -51,14 +53,7 @@ namespace TubeBuddyScraper.GameJolt
                     var gameUrl = gameCell.FindElement(By.XPath("./a")).GetAttribute("href");
                     game.GameUrl = gameUrl;
                     
-                    //var description = gameCell.FindElements(By.XPath("./div[@class='game_cell_data']/div[@class='game_text']"));
-                    //if (description.Any())
-                    //    game.Description = description.First().Text;
-
                     game.Genre = "Horror";
-                    //var genre = gameCell.FindElements(By.XPath("./div[@class='game_cell_data']/div[@class='game_genre']"));
-                    //if (genre.Any())
-                    //    game.Genre += $"; {genre.First().Text}";
                     game.DateChecked = DateTime.Now;
 
                     game.Site = Game.GameSite.GameJolt;
@@ -72,7 +67,14 @@ namespace TubeBuddyScraper.GameJolt
                     var thumbnail = gameCell.FindElements(By.XPath("./a/div/div[contains(@class, 'game-thumbnail-img')]/div[@class='-inner']/div[@class='-media']/img"));
                     if (thumbnail.Any())
                         game.ThumbnailUrl = thumbnail.First().GetAttribute("src");
-                    games.Add(game);
+
+                    if (!_existingGames.Any(g => g.Title == game.Title))
+                        games.Add(game);
+
+                    if (games.Count >= _maxGameSize)
+                    {
+                        break;
+                    }
                 }
 
                 pageNumber++;

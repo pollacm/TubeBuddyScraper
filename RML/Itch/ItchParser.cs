@@ -13,14 +13,16 @@ namespace TubeBuddyScraper.Itch
     {
         private readonly ChromeDriver _driver;
         private readonly int _maxGameSize;
+        private readonly List<Game> _existingGames;
         private string ItchPopularUrl = "https://itch.io/games/tag-horror";
         private string ItchNewAndPopularUrl = "https://itch.io/games/new-and-popular/tag-horror";
         private string ItchRecentUrl = "https://itch.io/games/newest/tag-horror";
 
-        public ItchParser(ChromeDriver driver, int maxGameSize)
+        public ItchParser(ChromeDriver driver, int maxGameSize, List<Game> existingGames)
         {
             _driver = driver;
             _maxGameSize = maxGameSize;
+            _existingGames = existingGames;
         }
 
         public List<Game> GetGames()
@@ -30,7 +32,7 @@ namespace TubeBuddyScraper.Itch
             games.AddRange(BuildGamesByUrl(ItchNewAndPopularUrl, Game.GameType.NewAndPopular));
             games.AddRange(BuildGamesByUrl(ItchRecentUrl, Game.GameType.Recent));
             
-            return games.Take(2).ToList();
+            return games;
         }
 
         private List<Game> BuildGamesByUrl(string url, Game.GameType type)
@@ -70,7 +72,14 @@ namespace TubeBuddyScraper.Itch
                     var thumbnail = gameCell.FindElements(By.XPath("./a[contains(@class,'thumb_link')]/div[@class='game_thumb']"));
                     if (thumbnail.Any())
                         game.ThumbnailUrl = thumbnail.First().GetAttribute("data-background_image");
-                    games.Add(game);
+
+                    if (!_existingGames.Any(g => g.Title == game.Title))
+                        games.Add(game);
+
+                    if (games.Count >= _maxGameSize)
+                    {
+                        break;
+                    }
                 }
 
                 pageNumber++;

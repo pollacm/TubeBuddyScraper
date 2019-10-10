@@ -1,23 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace TubeBuddyScraper.GameWriter
 {
     public class Writer
     {
-        public List<Game> Games { get; }
+        private readonly List<Game> _games;
+        //private string gameFile = @"E:\Dropbox\Private\GCG\GameDoc.txt";
+        private string gameFile = @"C:\Users\cxp6696\Dropbox\Private\GCG\GameDoc.txt";
 
         public Writer(List<Game> games)
         {
-            Games = games;
+            _games = games;
         }
 
-        public void WriteGames()
+        public void WriteGameFile()
         {
+            using (StreamWriter file = new StreamWriter(gameFile))
+            {
+                PrintHeader(file);
 
+                foreach (var game in _games)
+                {
+                    file.WriteLine(game.ToString());
+                }
+            }
+        }
+
+        private void PrintHeader(StreamWriter file)
+        {
+            file.WriteLine("Title\tKeyword\tDescription\tDateReleased\tSite\tPlatform\tPrice\tType\tGameUrl\tGenre\tThumbnailUrl\tScore\tTubebuddyScore\tTubebuddyGrade\tTubebuddySearchVolume\t" +
+                           "TubebuddySearchVolumeExact\tTubebuddyCompetitionScore\tTubebuddyCompetitionScoreExact\tTubebuddyOptimizationScore\tTubebuddyOptimizationScoreExact\tTubebuddyAverageViews\t" +
+                           "TubebuddyTargetViews\tTubebuddyMyAverageViews\tTubebuddyNumberOfVideos\tTubebuddySearchesPerMonth\tTubebuddyRelatedSearches");
+            
         }
     }
 }

@@ -41,6 +41,14 @@ namespace TubeBuddyScraper
         public string TubebuddySearchesPerMonth { get; set; }
         public List<string> TubebuddyRelatedSearches { get; set; }
 
+        public override string ToString()
+        {
+            return Title + "\t" +  Keyword + "\t" + Description + "\t" + DateReleased + "\t" + Site + "\t" + Platform + "\t" + Price + "\t" + Type + "\t" + GameUrl + "\t" + Genre + "\t" + ThumbnailUrl + "\t" + Score + "\t" + TubebuddyScore
+                   + "\t" + TubebuddyGrade + "\t" + TubebuddySearchVolume + "\t" + TubebuddySearchVolumeExact + "\t" + TubebuddyCompetitionScore + "\t" + TubebuddyCompetitionScoreExact
+                   + "\t" + TubebuddyOptimizationScore + "\t" + TubebuddyOptimizationScoreExact + "\t" + TubebuddyAverageViews + "\t" + TubebuddyTargetViews + "\t" + TubebuddyMyAverageViews + "\t" + TubebuddyNumberOfVideos
+                   + "\t" + TubebuddySearchesPerMonth + "\t" + string.Join("; ", TubebuddyRelatedSearches);
+        }
+
         public enum GameSystem
         {
             PS4,

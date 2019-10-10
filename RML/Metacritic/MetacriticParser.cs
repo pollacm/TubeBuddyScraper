@@ -13,14 +13,16 @@ namespace TubeBuddyScraper.Metacritic
     {
         private readonly ChromeDriver _driver;
         private readonly int _maxGameSize;
+        private readonly List<Game> _existingGames;
         private string MetacriticPS4Url = "https://www.metacritic.com/browse/games/release-date/new-releases/ps4/date";
         private string MetacriticPCUrl = "https://www.metacritic.com/browse/games/release-date/new-releases/pc/date";
         private string MetacriticIOSUrl = "https://www.metacritic.com/browse/games/release-date/new-releases/ios/date";
 
-        public MetacriticParser(ChromeDriver driver, int maxGameSize)
+        public MetacriticParser(ChromeDriver driver, int maxGameSize, List<Game> existingGames)
         {
             _driver = driver;
             _maxGameSize = maxGameSize;
+            _existingGames = existingGames;
         }
 
         public List<Game> GetGames()
@@ -57,7 +59,9 @@ namespace TubeBuddyScraper.Metacritic
 
                 game.Site = Game.GameSite.Metacritic;
                 game.Platform = platform;
-                games.Add(game);
+
+                if (!_existingGames.Any(g => g.Title == game.Title))
+                    games.Add(game);
 
                 if (games.Count >= _maxGameSize)
                     break;
