@@ -6,8 +6,8 @@ namespace TubeBuddyScraper.GameWriter
     public class Writer
     {
         private readonly List<Game> _games;
-        //private string gameFile = @"E:\Dropbox\Private\GCG\GameDoc.txt";
-        private string gameFile = @"C:\Users\cxp6696\Dropbox\Private\GCG\GameDoc.txt";
+        private string gameFile = @"E:\Dropbox\Private\GCG\GameDoc.txt";
+        //private string gameFile = @"C:\Users\cxp6696\Dropbox\Private\GCG\GameDoc.txt";
 
         public Writer(List<Game> games)
         {

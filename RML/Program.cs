@@ -20,14 +20,14 @@ namespace TubeBuddyScraper
 {
     internal class Program
     {
-        private static readonly int maxGameSize = 1;
+        private static readonly int maxGameSize = 2;
 
         private static void Main(string[] args)
         {
-            String pathToProfile = @"C:\Users\cxp6696\ChromeProfiles\User Data";
-            //String pathToProfile = @"C:\Users\Owner\ChromeProfiles\User Data";
-            string pathToChromedriver = @"C:\Users\cxp6696\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
-            //string pathToChromedriver = @"C:\Users\Owner\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
+            //String pathToProfile = @"C:\Users\cxp6696\ChromeProfiles\User Data";
+            String pathToProfile = @"C:\Users\Owner\ChromeProfiles\User Data";
+            //string pathToChromedriver = @"C:\Users\cxp6696\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
+            string pathToChromedriver = @"C:\Users\Owner\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
             var appStartTime = DateTime.Now.Date;
             ChromeOptions options = new ChromeOptions();
             options.AddArguments("user-data-dir=" + pathToProfile);
