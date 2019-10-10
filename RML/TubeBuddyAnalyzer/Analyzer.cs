@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -17,7 +18,6 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
 
         private readonly List<string> _additionalSearches = new List<string>
         {
-            " game",
             " gameplay",
             " horror game",
             " horror gameplay",
@@ -46,20 +46,42 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
             foreach (var game in _games)
             {
                 var searchbox = _driver.FindElement(By.XPath("//input[@id='tb-tag-explorer-input']"));
-                searchbox.SendKeys(game.Title);
+                //include game in first search
+                searchbox.SendKeys(game.Title + " game");
                 _driver.FindElement(By.XPath("//button[@id='tb-tag-explorer-explore']")).Click();
 
-                //game.TubebuddyGrade
-                //game.TubebuddyScore
-                //game.TubebuddySearchVolume
-                //game.TubebuddyCompetitionScore
-                //game.TubebuddyOptimizationScore
-                //game.TubebuddyNumberOfVideos
-                //game.TubebuddySearchesPerMonth
-                //game.TubebuddyAverageViews
-                //game.TubebuddyTargetViews
-                //game.TubebuddyMyAverageViews
-                //game.TubebuddyRelatedSearches
+                Thread.Sleep(new TimeSpan(0,0,0,1));
+
+                game.TubebuddyGrade = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-total-score-label']")).Text;
+                game.TubebuddyScore = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-total-score']")).Text;
+                //115-0 - Closer to 0 the better 115-92 - red; 92-69 - orange; 69-46 - yellow; 46-23 light-green; 23-0 - green
+                
+                var arrowSelectors = _driver.FindElements(By.CssSelector("svg.highcharts-root g.highcharts-series-group g.highcharts-markers image"));
+
+                game.TubebuddySearchVolume = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-search-volume']")).Text;
+                game.TubebuddySearchVolumeExact = arrowSelectors[0].GetAttribute("y");
+
+                game.TubebuddyCompetitionScore = _driver.FindElement(By.XPath("//span[@id='tb-tag-weighted-competition']")).Text;
+                game.TubebuddyCompetitionScoreExact = arrowSelectors[2].GetAttribute("y");
+
+                game.TubebuddyOptimizationScore = _driver.FindElement(By.XPath("//span[@class='tb-tag-explorer-chart-label tb-tag-explorer-keyword-count']")).Text;
+                game.TubebuddyOptimizationScoreExact = arrowSelectors[3].GetAttribute("y");
+
+                game.TubebuddyNumberOfVideos = _driver.FindElement(By.XPath("//span[@class='tb-tag-explorer-chart-label tb-tag-explorer-search-result-count']")).Text;
+                game.TubebuddySearchesPerMonth = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-search-volume-amount']")).Text;
+
+                var viewDataSelectors = _driver.FindElements(By.CssSelector("svg.highcharts-root g.highcharts-data-labels g text tspan:nth-of-type(2n)"));
+                game.TubebuddyAverageViews = viewDataSelectors[0].Text;
+                game.TubebuddyTargetViews = viewDataSelectors[1].Text;
+                game.TubebuddyMyAverageViews = viewDataSelectors[2].Text;
+
+
+                var relatedSearches = _driver.FindElements(By.XPath("//div[@class='tb-tag-explorer-related-keyword-tab-youtube-list']/div"));
+                foreach (var relatedSearch in relatedSearches)
+                {
+                    game.TubebuddyRelatedSearches.Add(relatedSearch.FindElement(By.XPath("./a")).Text);
+                }
+
                 game.Keyword = game.Title;
 
                 foreach (var relatedSearch in game.TubebuddyRelatedSearches)
@@ -82,19 +104,80 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
                     searchbox.SendKeys(relatedGame.Keyword);
                     _driver.FindElement(By.XPath("//button[@id='tb-tag-explorer-explore']")).Click();
 
-                    //relatedGame.TubebuddyGrade
-                    //relatedGame.TubebuddyScore
-                    //relatedGame.TubebuddySearchVolume
-                    //relatedGame.TubebuddyCompetitionScore
-                    //relatedGame.TubebuddyOptimizationScore
-                    //relatedGame.TubebuddyNumberOfVideos
-                    //relatedGame.TubebuddySearchesPerMonth
-                    //relatedGame.TubebuddyAverageViews
-                    //relatedGame.TubebuddyTargetViews
-                    //relatedGame.TubebuddyMyAverageViews
-                    //relatedGame.TubebuddyRelatedSearches
+                    Thread.Sleep(new TimeSpan(0, 0, 0, 1));
+
+                    relatedGame.TubebuddyGrade = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-total-score-label']")).Text;
+                    relatedGame.TubebuddyScore = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-total-score']")).Text;
+                    //115-0 - Closer to 0 the better 115-92 - red; 92-69 - orange; 69-46 - yellow; 46-23 light-green; 23-0 - green
+
+                    arrowSelectors = _driver.FindElements(By.CssSelector("svg.highcharts-root g.highcharts-series-group g.highcharts-markers image"));
+
+                    relatedGame.TubebuddySearchVolume = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-search-volume']")).Text;
+                    relatedGame.TubebuddySearchVolumeExact = arrowSelectors[0].GetAttribute("y");
+
+                    relatedGame.TubebuddyCompetitionScore = _driver.FindElement(By.XPath("//span[@id='tb-tag-weighted-competition']")).Text;
+                    relatedGame.TubebuddyCompetitionScoreExact = arrowSelectors[2].GetAttribute("y");
+
+                    relatedGame.TubebuddyOptimizationScore = _driver.FindElement(By.XPath("//span[@class='tb-tag-explorer-chart-label tb-tag-explorer-keyword-count']")).Text;
+                    relatedGame.TubebuddyOptimizationScoreExact = arrowSelectors[3].GetAttribute("y");
+
+                    relatedGame.TubebuddyNumberOfVideos = _driver.FindElement(By.XPath("//span[@class='tb-tag-explorer-chart-label tb-tag-explorer-search-result-count']")).Text;
+                    relatedGame.TubebuddySearchesPerMonth = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-search-volume-amount']")).Text;
+
+                    viewDataSelectors = _driver.FindElements(By.CssSelector("svg.highcharts-root g.highcharts-data-labels g text tspan:nth-of-type(2n)"));
+                    relatedGame.TubebuddyAverageViews = viewDataSelectors[0].Text;
+                    relatedGame.TubebuddyTargetViews = viewDataSelectors[1].Text;
+                    relatedGame.TubebuddyMyAverageViews = viewDataSelectors[2].Text;
 
                     newGames.Add(relatedGame);
+                }
+
+                foreach (var additionalSearch in _additionalSearches)
+                {
+                    var additionalSearchGame = new Game();
+                    additionalSearchGame.Title = game.Title;
+                    additionalSearchGame.Keyword = game.Title + additionalSearch;
+                    additionalSearchGame.DateChecked = game.DateChecked;
+                    additionalSearchGame.DateReleased = game.DateReleased;
+                    additionalSearchGame.Description = game.Description;
+                    additionalSearchGame.GameUrl = game.GameUrl;
+                    additionalSearchGame.Genre = game.Genre;
+                    additionalSearchGame.Platform = game.Platform;
+                    additionalSearchGame.Price = game.Price;
+                    additionalSearchGame.Score = game.Score;
+                    additionalSearchGame.Site = game.Site;
+                    additionalSearchGame.ThumbnailUrl = game.ThumbnailUrl;
+                    additionalSearchGame.Type = game.Type;
+
+                    searchbox.SendKeys(additionalSearchGame.Keyword);
+                    _driver.FindElement(By.XPath("//button[@id='tb-tag-explorer-explore']")).Click();
+
+                    Thread.Sleep(new TimeSpan(0, 0, 0, 1));
+
+                    additionalSearchGame.TubebuddyGrade = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-total-score-label']")).Text;
+                    additionalSearchGame.TubebuddyScore = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-total-score']")).Text;
+                    //115-0 - Closer to 0 the better 115-92 - red; 92-69 - orange; 69-46 - yellow; 46-23 light-green; 23-0 - green
+
+                    arrowSelectors = _driver.FindElements(By.CssSelector("svg.highcharts-root g.highcharts-series-group g.highcharts-markers image"));
+
+                    additionalSearchGame.TubebuddySearchVolume = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-search-volume']")).Text;
+                    additionalSearchGame.TubebuddySearchVolumeExact = arrowSelectors[0].GetAttribute("y");
+
+                    additionalSearchGame.TubebuddyCompetitionScore = _driver.FindElement(By.XPath("//span[@id='tb-tag-weighted-competition']")).Text;
+                    additionalSearchGame.TubebuddyCompetitionScoreExact = arrowSelectors[2].GetAttribute("y");
+
+                    additionalSearchGame.TubebuddyOptimizationScore = _driver.FindElement(By.XPath("//span[@class='tb-tag-explorer-chart-label tb-tag-explorer-keyword-count']")).Text;
+                    additionalSearchGame.TubebuddyOptimizationScoreExact = arrowSelectors[3].GetAttribute("y");
+
+                    additionalSearchGame.TubebuddyNumberOfVideos = _driver.FindElement(By.XPath("//span[@class='tb-tag-explorer-chart-label tb-tag-explorer-search-result-count']")).Text;
+                    additionalSearchGame.TubebuddySearchesPerMonth = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-search-volume-amount']")).Text;
+
+                    viewDataSelectors = _driver.FindElements(By.CssSelector("svg.highcharts-root g.highcharts-data-labels g text tspan:nth-of-type(2n)"));
+                    additionalSearchGame.TubebuddyAverageViews = viewDataSelectors[0].Text;
+                    additionalSearchGame.TubebuddyTargetViews = viewDataSelectors[1].Text;
+                    additionalSearchGame.TubebuddyMyAverageViews = viewDataSelectors[2].Text;
+
+                    newGames.Add(additionalSearchGame);
                 }
             }
 

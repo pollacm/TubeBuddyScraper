@@ -29,8 +29,8 @@ namespace TubeBuddyScraper.Itch
             games.AddRange(BuildGamesByUrl(ItchPopularUrl, Game.GameType.Popular));
             games.AddRange(BuildGamesByUrl(ItchNewAndPopularUrl, Game.GameType.NewAndPopular));
             games.AddRange(BuildGamesByUrl(ItchRecentUrl, Game.GameType.Recent));
-
-            return games;
+            
+            return games.Take(2).ToList();
         }
 
         private List<Game> BuildGamesByUrl(string url, Game.GameType type)

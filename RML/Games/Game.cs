@@ -26,11 +26,14 @@ namespace TubeBuddyScraper
         public string Genre { get; set; }
         public string ThumbnailUrl { get; set; }
         public string Score { get; set; }
-        public int     TubebuddyScore { get; set; }
+        public string TubebuddyScore { get; set; }
         public string TubebuddyGrade { get; set; }
         public string TubebuddySearchVolume { get; set; }
+        public string TubebuddySearchVolumeExact { get; set; }
         public string TubebuddyCompetitionScore { get; set; }
+        public string TubebuddyCompetitionScoreExact { get; set; }
         public string TubebuddyOptimizationScore { get; set; }
+        public string TubebuddyOptimizationScoreExact { get; set; }
         public string TubebuddyAverageViews { get; set; }
         public string TubebuddyTargetViews { get; set; }
         public string TubebuddyMyAverageViews { get; set; }

@@ -22,10 +22,10 @@ namespace TubeBuddyScraper
 
         private static void Main(string[] args)
         {
-            String pathToProfile = @"C:\Users\cxp6696\ChromeProfiles\User Data";
-            //String pathToProfile = @"C:\Users\Owner\ChromeProfiles\User Data";
-            string pathToChromedriver = @"C:\Users\cxp6696\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
-            //string pathToChromedriver = @"C:\Users\Owner\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
+            //String pathToProfile = @"C:\Users\cxp6696\ChromeProfiles\User Data";
+            String pathToProfile = @"C:\Users\Owner\ChromeProfiles\User Data";
+            //string pathToChromedriver = @"C:\Users\cxp6696\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
+            string pathToChromedriver = @"C:\Users\Owner\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
 
             ChromeOptions options = new ChromeOptions();
             //options.AddArguments("--load-extension=" +pathToExtension);
@@ -50,6 +50,8 @@ namespace TubeBuddyScraper
 
             var analyzer = new Analyzer(driver, games);
             games = analyzer.Analyze();
+
+            var x = 1;
         }
     }
 }
