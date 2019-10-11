@@ -54,7 +54,7 @@ namespace TubeBuddyScraper.GameJolt
                     game.GameUrl = gameUrl;
                     
                     game.Genre = "Horror";
-                    game.DateChecked = DateTime.Now;
+                    game.DateChecked = DateTime.Now.Date;
 
                     game.Site = Game.GameSite.GameJolt;
                     game.Platform = Game.GameSystem.Online;
@@ -68,7 +68,7 @@ namespace TubeBuddyScraper.GameJolt
                     if (thumbnail.Any())
                         game.ThumbnailUrl = thumbnail.First().GetAttribute("src");
 
-                    if (!_existingGames.Any(g => g.Title == game.Title))
+                    if (!_existingGames.Any(g => g.Title.ToLower() == game.Title.ToLower()))
                         games.Add(game);
 
                     if (games.Count >= _maxGameSize)

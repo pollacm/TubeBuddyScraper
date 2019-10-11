@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using TubeBuddyScraper.Games;
 
 namespace TubeBuddyScraper.TubeBuddyAnalyzer
 {
@@ -14,8 +15,9 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
     {
         private readonly ChromeDriver _driver;
         private List<Game> _games;
+        private readonly DateTime _dateStarted;
         private string ItchPopularUrl = "https://itch.io/games/tag-horror";
-
+        private readonly int SecondsToSleep = 5;
         private readonly List<string> _additionalSearches = new List<string>
         {
             " gameplay",
@@ -24,10 +26,11 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
             " game ending"
         };
 
-        public Analyzer(ChromeDriver driver, List<Game> games)
+        public Analyzer(ChromeDriver driver, List<Game> games, DateTime dateStarted)
         {
             _driver = driver;
             _games = games;
+            _dateStarted = dateStarted;
         }
 
         public List<Game> Analyze()
@@ -42,6 +45,8 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
             _driver.FindElement(By.XPath("//button[@id='tb-main-menu']")).Click();
             _driver.FindElement(By.XPath("//li[contains(text(),'Keyword Explorer')]")).Click();
             var newGames = new List<Game>();
+            var gameRepository = new GameRepository();
+            _games = gameRepository.GetGamesNotCompleteForDay(_dateStarted, _games);
 
             foreach (var game in _games)
             {
@@ -51,7 +56,7 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
                 searchbox.SendKeys(game.Title + " game");
                 _driver.FindElement(By.XPath("//button[@id='tb-tag-explorer-explore']")).Click();
 
-                Thread.Sleep(new TimeSpan(0,0,0,1));
+                Thread.Sleep(new TimeSpan(0,0,0, SecondsToSleep));
 
                 game.TubebuddyGrade = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-total-score-label']")).Text;
                 game.TubebuddyScore = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-total-score']")).Text;
@@ -76,15 +81,16 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
                 game.TubebuddyTargetViews = viewDataSelectors[1].Text;
                 game.TubebuddyMyAverageViews = viewDataSelectors[2].Text;
 
-
                 var relatedSearches = _driver.FindElements(By.XPath("//div[@class='tb-tag-explorer-related-keyword-tab-youtube-list']/div"));
                 foreach (var relatedSearch in relatedSearches)
                 {
                     if(!relatedSearch.Text.Contains("No related video"))
-                        game.TubebuddyRelatedSearches.Add(relatedSearch.FindElement(By.XPath("./a")).Text);
+                        game.TubebuddyRelatedSearches.Add(relatedSearch.FindElement(By.XPath("./a")).Text.ToLower());
                 }
 
                 game.Keyword = game.Title;
+
+                gameRepository.AddGame(game);
 
                 foreach (var relatedSearch in game.TubebuddyRelatedSearches)
                 {
@@ -107,7 +113,7 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
                     searchbox.SendKeys(relatedGame.Keyword);
                     _driver.FindElement(By.XPath("//button[@id='tb-tag-explorer-explore']")).Click();
 
-                    Thread.Sleep(new TimeSpan(0, 0, 0, 1));
+                    Thread.Sleep(new TimeSpan(0, 0, 0, SecondsToSleep));
 
                     relatedGame.TubebuddyGrade = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-total-score-label']")).Text;
                     relatedGame.TubebuddyScore = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-total-score']")).Text;
@@ -133,11 +139,12 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
                     relatedGame.TubebuddyMyAverageViews = viewDataSelectors[2].Text;
 
                     newGames.Add(relatedGame);
+                    gameRepository.AddGame(relatedGame);
                 }
 
                 foreach (var additionalSearch in _additionalSearches)
                 {
-                    if (game.TubebuddyRelatedSearches.Contains(additionalSearch))
+                    if (game.TubebuddyRelatedSearches.Contains(additionalSearch.ToLower()))
                         continue;
 
                     var additionalSearchGame = new Game();
@@ -159,7 +166,7 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
                     searchbox.SendKeys(additionalSearchGame.Keyword);
                     _driver.FindElement(By.XPath("//button[@id='tb-tag-explorer-explore']")).Click();
 
-                    Thread.Sleep(new TimeSpan(0, 0, 0, 1));
+                    Thread.Sleep(new TimeSpan(0, 0, 0, SecondsToSleep));
 
                     additionalSearchGame.TubebuddyGrade = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-total-score-label']")).Text;
                     additionalSearchGame.TubebuddyScore = _driver.FindElement(By.XPath("//span[@id='tb-tag-explorer-total-score']")).Text;
@@ -185,6 +192,7 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
                     additionalSearchGame.TubebuddyMyAverageViews = viewDataSelectors[2].Text;
 
                     newGames.Add(additionalSearchGame);
+                    gameRepository.AddGame(additionalSearchGame);
                 }
             }
 

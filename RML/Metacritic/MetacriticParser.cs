@@ -49,7 +49,7 @@ namespace TubeBuddyScraper.Metacritic
                 game.Title = title.Text;
                 game.GameUrl = title.GetAttribute("href");
 
-                game.DateChecked = DateTime.Now;
+                game.DateChecked = DateTime.Now.Date;
 
                 var releaseDate = gameCell.FindElement(By.XPath("./div[@class='product_wrap']/div[contains(@class, 'condensed_stats')]/ul/li[contains(@class, 'release_date')]/span[@class='data']"));
                 game.DateReleased = releaseDate.Text;
@@ -60,7 +60,7 @@ namespace TubeBuddyScraper.Metacritic
                 game.Site = Game.GameSite.Metacritic;
                 game.Platform = platform;
 
-                if (!_existingGames.Any(g => g.Title == game.Title))
+                if (!_existingGames.Any(g => g.Title.ToLower() == game.Title.ToLower()))
                     games.Add(game);
 
                 if (games.Count >= _maxGameSize)

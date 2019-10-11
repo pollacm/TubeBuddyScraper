@@ -59,7 +59,7 @@ namespace TubeBuddyScraper.Itch
                     var genre = gameCell.FindElements(By.XPath("./div[@class='game_cell_data']/div[@class='game_genre']"));
                     if (genre.Any())
                         game.Genre += $"; {genre.First().Text}";
-                    game.DateChecked = DateTime.Now;
+                    game.DateChecked = DateTime.Now.Date;
 
                     game.Site = Game.GameSite.Itch;
                     game.Platform = Game.GameSystem.Online;
@@ -73,7 +73,7 @@ namespace TubeBuddyScraper.Itch
                     if (thumbnail.Any())
                         game.ThumbnailUrl = thumbnail.First().GetAttribute("data-background_image");
 
-                    if (!_existingGames.Any(g => g.Title == game.Title))
+                    if (!_existingGames.Any(g => g.Title.ToLower() == game.Title.ToLower()))
                         games.Add(game);
 
                     if (games.Count >= _maxGameSize)

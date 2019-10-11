@@ -20,7 +20,7 @@ namespace TubeBuddyScraper
 {
     internal class Program
     {
-        private static readonly int maxGameSize = 2;
+        private static readonly int maxGameSize = 3;
 
         private static void Main(string[] args)
         {
@@ -49,19 +49,14 @@ namespace TubeBuddyScraper
             //var androidParser = new AndroidParser(driver, maxGameSize, games);
             //games.AddRange(androidParser.GetGames());
 
-            var analyzer = new Analyzer(driver, games);
+            var analyzer = new Analyzer(driver, games, appStartTime);
             games = analyzer.Analyze();
 
             var gameRepository = new GameRepository();
-            var pastGames = gameRepository.GetGames().Where(g => g.DateChecked < appStartTime);
-            games.AddRange(pastGames);
-
-            gameRepository.RefreshGames(games);
+            gameRepository.CleanStaleGamesFromDayAndAppend(appStartTime, games);
 
             var writer = new Writer(games);
             writer.WriteGameFile();
-
-            var x = 1;
         }
     }
 }

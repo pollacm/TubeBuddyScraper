@@ -57,7 +57,7 @@ namespace TubeBuddyScraper.Android
                 var gameUrl = gameCell.FindElement(By.XPath("./c-wiz[1]/div[1]/div[1]/div[1]/div[1]/div[1]/a[1]"));
                 game.GameUrl = gameUrl.GetAttribute("href");
 
-                game.DateChecked = DateTime.Now;
+                game.DateChecked = DateTime.Now.Date;
 
                 game.Site = Game.GameSite.GooglePlay;
                 game.Platform = Game.GameSystem.Android;
@@ -81,7 +81,7 @@ namespace TubeBuddyScraper.Android
                 if (thumbnail.Any())
                     game.ThumbnailUrl = thumbnail.First().GetAttribute("data-src");
 
-                if(!_existingGames.Any(g => g.Title == game.Title))
+                if (!_existingGames.Any(g => g.Title.ToLower() == game.Title.ToLower()))
                     games.Add(game);
 
                 if (games.Count >= _maxGameCount)
