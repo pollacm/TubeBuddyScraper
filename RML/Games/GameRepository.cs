@@ -54,9 +54,35 @@ namespace TubeBuddyScraper.Games
             return GetGames();
         }
 
-        public List<Game> CleanStaleGamesFromDayAndAppend(DateTime date, List<Game> newGames)
+        public List<Game> CleanStaleGamesFromDayAndAppendMarkAsExpiredAndNew(DateTime date, List<Game> newGames)
         {
             var games = CleanStaleGamesFromDay(date);
+            
+            //var notExpiredGames = games.Where(g => g.GameStatus == Game.Status.Current);
+            //foreach (var notExpiredGame in notExpiredGames)
+            //{
+            //    if (!newGames.Any(g => g.Title.ToLower() == notExpiredGame.Title.ToLower()))
+            //    {
+            //        notExpiredGame.GameStatus = Game.Status.Expired;
+            //    }
+            //    else
+            //    {
+            //        notExpiredGame.GameStatus = Game.Status.Current;
+            //    }
+            //}
+
+            //foreach (var newGame in newGames)
+            //{
+            //    if (!games.Any(g => g.Title.ToLower() == newGame.Title.ToLower()))
+            //    {
+            //        newGame.GameStatus = Game.Status.New;
+            //    }
+            //    else
+            //    {
+            //        newGame.GameStatus = Game.Status.Current;
+            //    }
+            //}
+
             games.AddRange(newGames);
             RefreshGames(games);
 

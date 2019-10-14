@@ -40,13 +40,17 @@ namespace TubeBuddyScraper
         public string TubebuddyNumberOfVideos { get; set; }
         public string TubebuddySearchesPerMonth { get; set; }
         public List<string> TubebuddyRelatedSearches { get; set; }
+        public Status GameStatus { get; set; }
+        public DateTime?  DateAdded { get; set; }
+        public DateTime? DateExpired { get; set; }
+
 
         public override string ToString()
         {
             return Title + "\t" +  Keyword + "\t" + Description + "\t" + DateReleased + "\t" + Site + "\t" + Platform + "\t" + Price + "\t" + Type + "\t" + GameUrl + "\t" + Genre + "\t" + ThumbnailUrl + "\t" + Score + "\t" + TubebuddyScore
                    + "\t" + TubebuddyGrade + "\t" + TubebuddySearchVolume + "\t" + TubebuddySearchVolumeExact + "\t" + TubebuddyCompetitionScore + "\t" + TubebuddyCompetitionScoreExact
                    + "\t" + TubebuddyOptimizationScore + "\t" + TubebuddyOptimizationScoreExact + "\t" + TubebuddyAverageViews + "\t" + TubebuddyTargetViews + "\t" + TubebuddyMyAverageViews + "\t" + TubebuddyNumberOfVideos
-                   + "\t" + TubebuddySearchesPerMonth + "\t" + string.Join("; ", TubebuddyRelatedSearches);
+                   + "\t" + TubebuddySearchesPerMonth + "\t" + string.Join("; ", TubebuddyRelatedSearches) +  "\t" + GameStatus + "\t" + DateAdded + "\t" + DateExpired;
         }
 
         public enum GameSystem
@@ -71,6 +75,13 @@ namespace TubeBuddyScraper
             Recent,
             Popular,
             NewAndPopular
+        }
+
+        public enum Status
+        {
+            Current,
+            New,
+            Expired
         }
 
         //public enum GameGenre

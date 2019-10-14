@@ -31,7 +31,7 @@ namespace TubeBuddyScraper.GameWriter
         {
             file.WriteLine("Title\tKeyword\tDescription\tDateReleased\tSite\tPlatform\tPrice\tType\tGameUrl\tGenre\tThumbnailUrl\tScore\tTubebuddyScore\tTubebuddyGrade\tTubebuddySearchVolume\t" +
                            "TubebuddySearchVolumeExact\tTubebuddyCompetitionScore\tTubebuddyCompetitionScoreExact\tTubebuddyOptimizationScore\tTubebuddyOptimizationScoreExact\tTubebuddyAverageViews\t" +
-                           "TubebuddyTargetViews\tTubebuddyMyAverageViews\tTubebuddyNumberOfVideos\tTubebuddySearchesPerMonth\tTubebuddyRelatedSearches");
+                           "TubebuddyTargetViews\tTubebuddyMyAverageViews\tTubebuddyNumberOfVideos\tTubebuddySearchesPerMonth\tTubebuddyRelatedSearches\tGameStatus\tDateAdded\tDateExpired");
             
         }
     }

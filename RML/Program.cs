@@ -53,7 +53,7 @@ namespace TubeBuddyScraper
             games = analyzer.Analyze();
 
             var gameRepository = new GameRepository();
-            gameRepository.CleanStaleGamesFromDayAndAppend(appStartTime, games);
+            gameRepository.CleanStaleGamesFromDayAndAppendMarkAsExpiredAndNew(appStartTime, games);
 
             var writer = new Writer(games);
             writer.WriteGameFile();
