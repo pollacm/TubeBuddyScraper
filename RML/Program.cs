@@ -20,7 +20,7 @@ namespace TubeBuddyScraper
 {
     internal class Program
     {
-        private static readonly int maxGameSize = 3;
+        private static readonly int maxGameSize = 30;
 
         private static void Main(string[] args)
         {
@@ -40,16 +40,16 @@ namespace TubeBuddyScraper
             var itchParser = new ItchParser(driver, maxGameSize, games);
             games.AddRange(itchParser.GetGames());
 
-            //var gameJoltParser = new GameJoltParser(driver, maxGameSize, games);
-            //games.AddRange(gameJoltParser.GetGames());
+            var gameJoltParser = new GameJoltParser(driver, maxGameSize, games);
+            games.AddRange(gameJoltParser.GetGames());
 
-            //var metacriticParser = new MetacriticParser(driver, maxGameSize, games);
-            //games.AddRange(metacriticParser.GetGames());
+            var metacriticParser = new MetacriticParser(driver, maxGameSize, games);
+            games.AddRange(metacriticParser.GetGames());
 
-            //var androidParser = new AndroidParser(driver, maxGameSize, games);
-            //games.AddRange(androidParser.GetGames());
+            var androidParser = new AndroidParser(driver, maxGameSize, games);
+            games.AddRange(androidParser.GetGames());
 
-            var analyzer = new Analyzer(driver, games, appStartTime);
+            var analyzer = new Analyzer(driver, games, appStartTime,false);
             games = analyzer.Analyze();
 
             var gameRepository = new GameRepository();
