@@ -44,6 +44,8 @@ namespace TubeBuddyScraper
         public DateTime?  DateAdded { get; set; }
         public DateTime? DateExpired { get; set; }
 
+        //TODO: Need position for each site??
+        public int Position { get; set; }
 
         public override string ToString()
         {
@@ -89,5 +91,21 @@ namespace TubeBuddyScraper
         //    Horror,
         //    Other
         //}
+    }
+
+    public class GameComparer : IEqualityComparer<Game>
+    {
+        bool IEqualityComparer<Game>.Equals(Game x, Game y)
+        {
+            return String.Equals(x.Title, y.Title, StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        int IEqualityComparer<Game>.GetHashCode(Game obj)
+        {
+            if (Object.ReferenceEquals(obj, null))
+                return 0;
+
+            return obj.Title.GetHashCode();
+        }
     }
 }
