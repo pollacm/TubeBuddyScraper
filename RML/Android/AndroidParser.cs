@@ -27,17 +27,17 @@ namespace TubeBuddyScraper.Android
         public List<Game> GetGames()
         {
             var games = new List<Game>();
-            games.AddRange(BuildGamesByUrl(AndroidURL, true));
-            games.AddRange(BuildGamesByUrl(AndroidURL, false));
+            games.AddRange(BuildGamesByUrl(AndroidURL, Game.GameType.AndroidFree));
+            games.AddRange(BuildGamesByUrl(AndroidURL, Game.GameType.AndroidPaid));
 
             return games;
         }
 
-        private List<Game> BuildGamesByUrl(string url, bool free)
+        private List<Game> BuildGamesByUrl(string url, Game.GameType type)
         {
             var games = new List<Game>();
             _driver.NavigateToUrl(url);
-            if (free)
+            if (type == Game.GameType.AndroidFree)
             {
                 _driver.FindElement(By.XPath("//h2[contains(text(),'Top New Free Games')]")).Click();
             }
@@ -47,6 +47,7 @@ namespace TubeBuddyScraper.Android
             }
             Thread.Sleep(new TimeSpan(0,0,0,10));
             var gameCells = _driver.FindElements(By.XPath("//html[1]/body[1]/div[1]/div[4]/c-wiz[2]/div[1]/c-wiz[1]/div[1]/c-wiz[1]/c-wiz[1]/c-wiz[1]/div[1]/div[2]/div"));
+            var position = 1;
             foreach (var gameCell in gameCells)
             {
                 var game = new Game();
@@ -81,13 +82,23 @@ namespace TubeBuddyScraper.Android
                 if (thumbnail.Any())
                     game.ThumbnailUrl = thumbnail.First().GetAttribute("data-src");
 
-                if (!_existingGames.Any(g => g.Title.ToLower() == game.Title.ToLower()))
+                game.Position = position;
+                game.PositionChangeDate = DateTime.Now.Date;
+
+                if (!_existingGames.Any(g => g.Title.ToLower() == game.Title.ToLower() && g.Type == type && g.GameStatus == Game.Status.Current && g.Position != position))
+                {
                     games.Add(game);
+                }
+
+                //if (!_existingGames.Any(g => g.Title.ToLower() == game.Title.ToLower()))
+                //    games.Add(game);
 
                 if (games.Count >= _maxGameCount)
                 {
                     break;
                 }
+
+                position++;
             }
 
             return games;

@@ -64,6 +64,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Games\GameRepository.cs" />
+    <Compile Include="Slack\AccessToken.cs" />
+    <Compile Include="Slack\SlackClient.cs" />
+    <Compile Include="Slack\SlackClientTest.cs" />
     <Compile Include="TubeBuddyAnalyzer\Analyzer.cs" />
   </ItemGroup>
   <ItemGroup>

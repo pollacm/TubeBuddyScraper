@@ -15,6 +15,7 @@ using TubeBuddyScraper.Games;
 using TubeBuddyScraper.GameWriter;
 using TubeBuddyScraper.Itch;
 using TubeBuddyScraper.Metacritic;
+using TubeBuddyScraper.Slack;
 using TubeBuddyScraper.TubeBuddyAnalyzer;
 
 namespace TubeBuddyScraper
@@ -25,16 +26,19 @@ namespace TubeBuddyScraper
 
         private static void Main(string[] args)
         {
-            //String pathToProfile = @"C:\Users\cxp6696\ChromeProfiles\User Data";
-            String pathToProfile = @"C:\Users\Owner\ChromeProfiles\User Data";
-            //string pathToChromedriver = @"C:\Users\cxp6696\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
-            string pathToChromedriver = @"C:\Users\Owner\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
             var appStartTime = DateTime.Now.Date;
+
+            String pathToProfile = @"C:\Users\cxp6696\ChromeProfiles\User Data";
+            //String pathToProfile = @"C:\Users\Owner\ChromeProfiles\User Data";
+            string pathToChromedriver = @"C:\Users\cxp6696\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
+            //string pathToChromedriver = @"C:\Users\Owner\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
             ChromeOptions options = new ChromeOptions();
             options.AddArguments("user-data-dir=" + pathToProfile);
             Environment.SetEnvironmentVariable("webdriver.chrome.driver", pathToChromedriver);
 
             var games = new List<Game>();
+
+            //TODO: Mark All New as Current where not today
 
             ChromeDriver driver = new ChromeDriver(options);
 
@@ -50,14 +54,30 @@ namespace TubeBuddyScraper
             var androidParser = new AndroidParser(driver, maxGameSize, games);
             games.AddRange(androidParser.GetGames());
 
-            var analyzer = new Analyzer(driver, games, appStartTime,false);
-            games = analyzer.Analyze();
+            //if (args.Any())
+            //{
+                var analyzer = new Analyzer(driver, games, appStartTime, false);
+                games = analyzer.Analyze();
+            //}
 
             var gameRepository = new GameRepository();
             gameRepository.CleanStaleGamesFromDayAndAppendMarkAsExpiredAndNew(appStartTime, games);
 
             var writer = new Writer(games);
             writer.WriteGameFile();
+
+            var expiredGames = gameRepository.GetExpiredGamesForDay(DateTime.Now.Date);
+            if (expiredGames.Any())
+            {
+                var expiredText = $"**********\nEXPIRED GAMES\n**********\n\n{string.Join("\n",expiredGames)}\n\n\n";
+                //new SlackClient().PostMessage(expiredText);
+            }
+            var addedGames = gameRepository.GetAddedGamesForDay(DateTime.Now.Date);
+            if (addedGames.Any())
+            {
+                var addedText = $"**********\nADDED GAMES\n**********\n\n{string.Join("\n", addedGames)}\n\n\n";
+                //new SlackClient().PostMessage(addedText);
+            }
         }
     }
 }
