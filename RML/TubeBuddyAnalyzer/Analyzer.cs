@@ -49,9 +49,19 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
             var newGames = new List<Game>();
             var gameRepository = new GameRepository();
             _games = gameRepository.GetGamesNotCompleteForDay(_dateStarted, _games);
+            var currentSearchedGames = new List<Game>();
 
             foreach (var game in _games)
             {
+                if (!currentSearchedGames.Any(g => g.Title.ToLower() == game.Title.ToLower()))
+                {
+                    currentSearchedGames.Add(game);
+                }
+                else
+                {
+                    continue;
+                }
+
                 var searchbox = _driver.FindElement(By.XPath("//input[@id='tb-tag-explorer-input']"));
                 //include game in first search
                 searchbox.Clear();

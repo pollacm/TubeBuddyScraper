@@ -46,6 +46,7 @@ namespace TubeBuddyScraper
 
         //TODO: Need position for each site??
         public int Position { get; set; }
+        public DateTime? PositionChangeDate { get; set; }
 
         public override string ToString()
         {
@@ -76,7 +77,9 @@ namespace TubeBuddyScraper
         {
             Recent,
             Popular,
-            NewAndPopular
+            NewAndPopular,
+            AndroidFree,
+            AndroidPaid
         }
 
         public enum Status
@@ -97,7 +100,7 @@ namespace TubeBuddyScraper
     {
         bool IEqualityComparer<Game>.Equals(Game x, Game y)
         {
-            return String.Equals(x.Title, y.Title, StringComparison.CurrentCultureIgnoreCase);
+            return String.Equals(x.Title, y.Title, StringComparison.CurrentCultureIgnoreCase) && x.Type == y.Type;
         }
 
         int IEqualityComparer<Game>.GetHashCode(Game obj)
@@ -105,7 +108,7 @@ namespace TubeBuddyScraper
             if (Object.ReferenceEquals(obj, null))
                 return 0;
 
-            return obj.Title.GetHashCode();
+            return obj.Title.ToLower().GetHashCode() + obj.Type.GetHashCode();
         }
     }
 }

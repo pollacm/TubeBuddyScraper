@@ -39,6 +39,7 @@ namespace TubeBuddyScraper.GameJolt
         {
             var games = new List<Game>();
             int pageNumber = 1;
+            var position = 1;
             while (games.Count < _maxGameSize)
             {
                 _driver.NavigateToUrl(url + "?page=" + pageNumber);
@@ -68,13 +69,23 @@ namespace TubeBuddyScraper.GameJolt
                     if (thumbnail.Any())
                         game.ThumbnailUrl = thumbnail.First().GetAttribute("src");
 
-                    if (!_existingGames.Any(g => g.Title.ToLower() == game.Title.ToLower()))
+                    game.Position = position;
+                    game.PositionChangeDate = DateTime.Now.Date;
+
+                    if (!_existingGames.Any(g => g.Title.ToLower() == game.Title.ToLower() && g.Type == type && g.GameStatus == Game.Status.Current && g.Position != position))
+                    {
                         games.Add(game);
+                    }
+
+                    //if (!_existingGames.Any(g => g.Title.ToLower() == game.Title.ToLower()))
+                    //    games.Add(game);
 
                     if (games.Count >= _maxGameSize)
                     {
                         break;
                     }
+
+                    position++;
                 }
 
                 pageNumber++;

@@ -58,8 +58,19 @@ namespace TubeBuddyScraper.Games
         {
             var games = CleanStaleGamesFromDay(date);
 
-            //var expired = games.Except(newGames, new GameComparer());
-            //var notExpired = newGames.Except(games, new GameComparer());
+            var expiredGames = games.Except(newGames, new GameComparer()).ToList();
+            foreach (var expiredGame in expiredGames)
+            {
+                expiredGame.GameStatus = Game.Status.Expired;
+                expiredGame.DateExpired = DateTime.Now.Date;
+            }
+            
+            var firstTimeGames = newGames.Except(games, new GameComparer()).ToList();
+            foreach (var firstTimeGame in firstTimeGames)
+            {
+                firstTimeGame.GameStatus = Game.Status.New;
+                firstTimeGame.DateAdded = DateTime.Now.Date;
+            }
 
             //var notExpiredGames = games.Where(g => g.GameStatus == Game.Status.Current);
             //foreach (var notExpiredGame in notExpiredGames)
@@ -90,6 +101,17 @@ namespace TubeBuddyScraper.Games
             RefreshGames(games);
 
             return GetGames();
+        }
+        public List<Game> GetExpiredGamesForDay(DateTime date)
+        {
+            var games = GetGames().Where(g => g.DateExpired == date).ToList();
+            return games;
+        }
+
+        public List<Game> GetAddedGamesForDay(DateTime date)
+        {
+            var games = GetGames().Where(g => g.DateAdded == date).ToList();
+            return games;
         }
 
         public List<Game> GetGamesForDay(DateTime date)
