@@ -61,15 +61,21 @@ namespace TubeBuddyScraper.Games
             //var expiredGames = games.Except(newGames, new GameComparer()).ToList();
             //foreach (var expiredGame in expiredGames)
             //{
-            //    expiredGame.GameStatus = Game.Status.Expired;
-            //    expiredGame.DateExpired = DateTime.Now.Date;
+            //    if (expiredGame.GameStatus != Game.Status.Expired)
+            //    {
+            //        expiredGame.GameStatus = Game.Status.Expired;
+            //        expiredGame.DateExpired = DateTime.Now.Date;
+            //    }
             //}
-            
+
             //var firstTimeGames = newGames.Except(games, new GameComparer()).ToList();
             //foreach (var firstTimeGame in firstTimeGames)
             //{
-            //    firstTimeGame.GameStatus = Game.Status.New;
-            //    firstTimeGame.DateAdded = DateTime.Now.Date;
+            //    if (firstTimeGame.GameStatus != Game.Status.New)
+            //    {
+            //        firstTimeGame.GameStatus = Game.Status.New;
+            //        firstTimeGame.DateAdded = DateTime.Now.Date;
+            //    }
             //}
 
             //var notExpiredGames = games.Where(g => g.GameStatus == Game.Status.Current);
@@ -127,6 +133,16 @@ namespace TubeBuddyScraper.Games
             var nonCompleteGamesForDay = newGames.Where(g => !completedGamesForDay.Any(g2 => g2.Title == g.Title));
 
             return nonCompleteGamesForDay.ToList();
+        }
+
+        public void MarkNewGamesAsCurrentFromDate(DateTime date)
+        {
+            var games = GetGames().Where(g => g.GameStatus == Game.Status.New && g.DateAdded < date).ToList();
+            foreach (var game in games)
+            {
+                game.GameStatus = Game.Status.Current;
+            }
+            RefreshGames(games);
         }
     }
 }

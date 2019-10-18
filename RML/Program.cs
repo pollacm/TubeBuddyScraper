@@ -41,6 +41,8 @@ namespace TubeBuddyScraper
             //}
 
             var appStartTime = DateTime.Now.Date;
+            var gameRepository = new GameRepository();
+            //gameRepository.MarkNewGamesAsCurrentFromDate(appStartTime);
 
             String pathToProfile = @"C:\Users\cxp6696\ChromeProfiles\User Data";
             //String pathToProfile = @"C:\Users\Owner\ChromeProfiles\User Data";
@@ -73,8 +75,7 @@ namespace TubeBuddyScraper
                 var analyzer = new Analyzer(driver, games, appStartTime, false);
                 games = analyzer.Analyze();
             //}
-
-            var gameRepository = new GameRepository();
+            
             gameRepository.CleanStaleGamesFromDayAndAppendMarkAsExpiredAndNew(appStartTime, games);
 
             var writer = new Writer(games);
