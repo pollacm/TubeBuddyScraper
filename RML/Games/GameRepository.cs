@@ -58,8 +58,8 @@ namespace TubeBuddyScraper.Games
         {
             var games = CleanStaleGamesFromDay(date);
 
-            var expired = games.Except(newGames, new GameComparer());
-            var notExpired = newGames.Except(games, new GameComparer());
+            //var expired = games.Except(newGames, new GameComparer());
+            //var notExpired = newGames.Except(games, new GameComparer());
 
             //var notExpiredGames = games.Where(g => g.GameStatus == Game.Status.Current);
             //foreach (var notExpiredGame in notExpiredGames)

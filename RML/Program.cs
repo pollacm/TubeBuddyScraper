@@ -21,10 +21,24 @@ namespace TubeBuddyScraper
 {
     internal class Program
     {
-        private static readonly int maxGameSize = 30;
+        private static readonly int maxGameSize = 40;
 
         private static void Main(string[] args)
         {
+            //string[] dirs = Directory.GetFiles(@"E:\Owner\Videos\Resources\Sounds\aaa Common Sounds");
+            
+            //foreach (string dir in dirs)
+            //{
+            //    var file = Path.GetFileName(dir);
+
+            //    if (file.Contains(' '))
+            //    {
+            //        file = file.Replace(' ', '-');
+            //        var path = Path.GetPathRoot(dir);
+            //        System.IO.File.Move(dir, path + file);
+            //    }
+            //}
+
             //String pathToProfile = @"C:\Users\cxp6696\ChromeProfiles\User Data";
             String pathToProfile = @"C:\Users\Owner\ChromeProfiles\User Data";
             //string pathToChromedriver = @"C:\Users\cxp6696\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe";
@@ -44,8 +58,8 @@ namespace TubeBuddyScraper
             var gameJoltParser = new GameJoltParser(driver, maxGameSize, games);
             games.AddRange(gameJoltParser.GetGames());
 
-            var metacriticParser = new MetacriticParser(driver, maxGameSize, games);
-            games.AddRange(metacriticParser.GetGames());
+            //var metacriticParser = new MetacriticParser(driver, maxGameSize, games);
+            //games.AddRange(metacriticParser.GetGames());
 
             var androidParser = new AndroidParser(driver, maxGameSize, games);
             games.AddRange(androidParser.GetGames());

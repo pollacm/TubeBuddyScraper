@@ -55,7 +55,7 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
                 var searchbox = _driver.FindElement(By.XPath("//input[@id='tb-tag-explorer-input']"));
                 //include game in first search
                 searchbox.Clear();
-                searchbox.SendKeys(game.Title + " game");
+                searchbox.SendKeys(RemoveSpecialCharacters(game.Title) + " game");
                 _driver.FindElement(By.XPath("//button[@id='tb-tag-explorer-explore']")).Click();
 
                 Thread.Sleep(new TimeSpan(0,0,0, 1));
@@ -109,6 +109,19 @@ namespace TubeBuddyScraper.TubeBuddyAnalyzer
             _games.AddRange(newGames);
 
             return _games;
+        }
+
+        public static string RemoveSpecialCharacters(string str)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in str)
+            {
+                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_' || c == '\'' || c == '(' || c == ')' || c == ' ')
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
         }
 
         private void PerformAdditionalSearch(Game game, IWebElement searchbox, List<Game> newGames, GameRepository gameRepository)
