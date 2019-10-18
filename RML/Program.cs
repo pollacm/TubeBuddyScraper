@@ -26,6 +26,20 @@ namespace TubeBuddyScraper
 
         private static void Main(string[] args)
         {
+            //string[] dirs = Directory.GetFiles(@"E:\Owner\Videos\Resources\Sounds\aaa Common Sounds");
+
+            //foreach (string dir in dirs)
+            //{
+            //    var file = Path.GetFileName(dir);
+
+            //    if (file.Contains(' '))
+            //    {
+            //        file = file.Replace(' ', '-');
+            //        var path = Path.GetPathRoot(dir);
+            //        System.IO.File.Move(dir, path + file);
+            //    }
+            //}
+
             var appStartTime = DateTime.Now.Date;
 
             String pathToProfile = @"C:\Users\cxp6696\ChromeProfiles\User Data";
@@ -66,18 +80,18 @@ namespace TubeBuddyScraper
             var writer = new Writer(games);
             writer.WriteGameFile();
 
-            var expiredGames = gameRepository.GetExpiredGamesForDay(DateTime.Now.Date);
-            if (expiredGames.Any())
-            {
-                var expiredText = $"**********\nEXPIRED GAMES\n**********\n\n{string.Join("\n",expiredGames)}\n\n\n";
-                //new SlackClient().PostMessage(expiredText);
-            }
-            var addedGames = gameRepository.GetAddedGamesForDay(DateTime.Now.Date);
-            if (addedGames.Any())
-            {
-                var addedText = $"**********\nADDED GAMES\n**********\n\n{string.Join("\n", addedGames)}\n\n\n";
-                //new SlackClient().PostMessage(addedText);
-            }
+            //var expiredGames = gameRepository.GetExpiredGamesForDay(DateTime.Now.Date);
+            //if (expiredGames.Any())
+            //{
+            //    var expiredText = $"**********\nEXPIRED GAMES\n**********\n\n{string.Join("\n",expiredGames)}\n\n\n";
+            //    //new SlackClient().PostMessage(expiredText);
+            //}
+            //var addedGames = gameRepository.GetAddedGamesForDay(DateTime.Now.Date);
+            //if (addedGames.Any())
+            //{
+            //    var addedText = $"**********\nADDED GAMES\n**********\n\n{string.Join("\n", addedGames)}\n\n\n";
+            //    //new SlackClient().PostMessage(addedText);
+            //}
         }
     }
 }
