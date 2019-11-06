@@ -3,6 +3,6 @@
 	I.E.
 		C:\Users\{user}\AppData\Local\Google\Chrome\User Data
 	Paste that into windows explorer
-	Copy that entire folder to C:\Users\cxp6696\ChromeProfiles\User Data
+	Copy the entire User Data folder to C:\Users\{name}\ChromeProfiles\User Data
 Get the path to chromedriver in the project
 	I.E. - C:\Users\{user}\source\repos\TubeBuddyScraper\packages\Selenium.WebDriver.ChromeDriver.77.0.3865.4000\driver\win32\chromedriver.exe
