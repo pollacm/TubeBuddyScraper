@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8AE9E084-CB6A-41AE-B54F-B04016446B79}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>TubeBuddyScraper</RootNamespace>
-    <AssemblyName>TubeBuddyScraper</AssemblyName>
+    <RootNamespace>YoutubeSubscriberManager</RootNamespace>
+    <AssemblyName>YoutubeSubscriberManager</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -54,26 +54,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Android\AndroidParser.cs" />
-    <Compile Include="GameJolt\GameJoltParser.cs" />
-    <Compile Include="Games\Game.cs" />
-    <Compile Include="GameWriter\Writer.cs" />
-    <Compile Include="Itch\ItchParser.cs" />
-    <Compile Include="Metacritic\MetacriticParser.cs" />
+    <Compile Include="Subscriber\Subscriber.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Games\GameRepository.cs" />
     <Compile Include="Slack\AccessToken.cs" />
     <Compile Include="Slack\SlackClient.cs" />
     <Compile Include="Slack\SlackClientTest.cs" />
-    <Compile Include="TubeBuddyAnalyzer\Analyzer.cs" />
+    <Compile Include="Subscriber\SubscriberInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="games.json" />
-    <None Include="rmlPlayers.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Notes.txt" />
