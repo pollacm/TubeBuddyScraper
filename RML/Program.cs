@@ -14,10 +14,12 @@ namespace YoutubeSubscriberManager
         //less than a minute watches
         static List<string> blacklist = new List<string>
         {
-            "TOMXGAMERS".ToLower(),
-            "KHADIJA PRODUCTIONS Tutorials".ToLower(),
-            "I Am Lif3ofdreads".ToLower(),
-            "Xander Zone".ToLower(),
+            // = 30 second watch
+            //* = need to watch a vid and see if they respond
+            "TOMXGAMERS".ToLower(), //
+            "KHADIJA PRODUCTIONS Tutorials".ToLower(),//
+            "I Am Lif3ofdreads".ToLower(),//
+            "Xander Zone".ToLower(),//
             "Criminal 2020".ToLower(),
             "GameHunter".ToLower(),
             "Aryan Satya".ToLower(),
@@ -31,12 +33,12 @@ namespace YoutubeSubscriberManager
             "Mister Omega".ToLower(),
             "JeremiahGR".ToLower(),
             "The Nintendo Network".ToLower(),
-            "SurgeTV".ToLower(),//
+            "SurgeTV".ToLower(),//*
             "CoryJT".ToLower(),
             "Dan Hundred Bankss Entertainment".ToLower(),
             "Lady Judged".ToLower(),
             "Noizey Plays".ToLower(),
-            "Zerasino Reboot".ToLower(),//
+            "Zerasino Reboot".ToLower(),//*
             "Optic Ninja".ToLower(),
             "CSN_CityGirl".ToLower(),
             "Tat Test Dummies".ToLower(),
