@@ -11,17 +11,54 @@ namespace YoutubeSubscriberManager
 {
     internal class Program
     {
+        //less than a minute watches
+        static List<string> blacklist = new List<string>
+        {
+            "TOMXGAMERS".ToLower(),
+            "KHADIJA PRODUCTIONS Tutorials".ToLower(),
+            "I Am Lif3ofdreads".ToLower(),
+            "Xander Zone".ToLower(),
+            "Criminal 2020".ToLower(),
+            "GameHunter".ToLower(),
+            "Aryan Satya".ToLower(),
+            "Dude Gamer".ToLower(),
+            "Teele Loves Jobu".ToLower(),
+            "PS5 Gamer".ToLower(),
+            "CHILLSCISSORS".ToLower(),//
+            "Timothy B. Salinas".ToLower(),
+            "DeGRA".ToLower(),
+            "Zio bugio".ToLower(),
+            "Mister Omega".ToLower(),
+            "JeremiahGR".ToLower(),
+            "The Nintendo Network".ToLower(),
+            "SurgeTV".ToLower(),//
+            "CoryJT".ToLower(),
+            "Dan Hundred Bankss Entertainment".ToLower(),
+            "Lady Judged".ToLower(),
+            "Noizey Plays".ToLower(),
+            "Zerasino Reboot".ToLower(),//
+            "Optic Ninja".ToLower(),
+            "CSN_CityGirl".ToLower(),
+            "Tat Test Dummies".ToLower(),
+            "I'm Norman!".ToLower(),
+        };
+
+
+        static List<string> whitelist = new List<string>
+        {
+            "milada มิลา".ToLower(), //16/32
+            "Food Idea by Tuhin".ToLower(), //4.5/32
+            "MT GAMING5".ToLower(), //15/32,
+            "Game Boys".ToLower(), //8/32
+            "SK Gowrob".ToLower(),
+            "BROWEN".ToLower(), //10/32
+
+        };
         private static void Main(string[] args)
         {
 
             var appStartTime = DateTime.Now.Date;
-
-            var exclusionList = new List<string>
-            {
-                "TOMXGAMERS".ToLower(),
-                "KHADIJA PRODUCTIONS Tutorials".ToLower()
-            };
-
+            
             var acceptableWatchTimes = new List<string>
             {
                 "minutes",
@@ -122,6 +159,7 @@ namespace YoutubeSubscriberManager
                 Thread.Sleep(3000);
             }
 
+            //Current supporters
             videos = driver.FindElementsByXPath("//ytd-grid-video-renderer");
             var currentElement = 0;
             foreach (var video in videos)
@@ -130,19 +168,19 @@ namespace YoutubeSubscriberManager
                 var subscriber = subscribers.SingleOrDefault(s => s.Name == subscriberName);
                 if (subscriber != null)
                 {
-                    if (exclusionList.Contains(subscriberName.ToLower()) ||
-                        (!subscriber.CommentedLately || subscriber.Watches > 2))
+                    if (blacklist.Contains(subscriberName.ToLower()) || (!subscriber.CommentedLately || subscriber.Watches > 2))
                     {
                         RemoveElement(driver, currentElement);
                     }
                     else
                     {
+                        StampElement(driver, subscriberName, currentElement);
                         currentElement++;
                     }
                 }
             }
 
-
+            //blacklist or haven't returned watch
             driver.NavigateToUrl("https:/www.youtube.com/feed/subscriptions");
             for (int i = 0; i < rowsToIncrementOnSubPage; i++)
             {
@@ -158,18 +196,103 @@ namespace YoutubeSubscriberManager
                 var subscriber = subscribers.SingleOrDefault(s => s.Name == subscriberName);
                 if (subscriber != null)
                 {
-                    if (exclusionList.Contains(subscriberName.ToLower()) || subscriber.Watches > 0)
+                    if (blacklist.Contains(subscriberName.ToLower()) || subscriber.Watches > 0)
                     {
                         RemoveElement(driver, currentElement);
                     }
                     else
                     {
+                        StampElement(driver, subscriberName, currentElement);
                         currentElement++;
                     }
                 }
             }
 
+            //non-supporters
+            driver.NavigateToUrl("https:/www.youtube.com/feed/subscriptions");
+            for (int i = 0; i < rowsToIncrementOnSubPage; i++)
+            {
+                ScrollToBottom(driver);
+                Thread.Sleep(3000);
+            }
 
+            videos = driver.FindElementsByXPath("//ytd-grid-video-renderer");
+            currentElement = 0;
+            foreach (var video in videos)
+            {
+                var subscriberName = video.FindElement(By.XPath("./div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ytd-channel-name")).Text;
+                var subscriber = subscribers.SingleOrDefault(s => s.Name == subscriberName);
+                if (subscriber != null)
+                {
+                    if (subscriber.CommentedLately)
+                    {
+                        RemoveElement(driver, currentElement);
+                    }
+                    else
+                    {
+                        StampElement(driver, subscriberName, currentElement);
+                        currentElement++;
+                    }
+                }
+            }
+
+            //blacklist
+            driver.NavigateToUrl("https:/www.youtube.com/feed/subscriptions");
+            for (int i = 0; i < rowsToIncrementOnSubPage; i++)
+            {
+                ScrollToBottom(driver);
+                Thread.Sleep(3000);
+            }
+
+            videos = driver.FindElementsByXPath("//ytd-grid-video-renderer");
+            currentElement = 0;
+            foreach (var video in videos)
+            {
+                var subscriberName = video.FindElement(By.XPath("./div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ytd-channel-name")).Text;
+                var subscriber = subscribers.SingleOrDefault(s => s.Name == subscriberName);
+                if (subscriber != null)
+                {
+                    if (!blacklist.Contains(subscriberName.ToLower()))
+                    {
+                        RemoveElement(driver, currentElement);
+                    }
+                    else
+                    {
+                        StampElement(driver, subscriberName, currentElement);
+                        currentElement++;
+                    }
+                }
+            }
+
+            //white list
+            driver.NavigateToUrl("https:/www.youtube.com/feed/subscriptions");
+            for (int i = 0; i < rowsToIncrementOnSubPage; i++)
+            {
+                ScrollToBottom(driver);
+                Thread.Sleep(3000);
+            }
+
+            videos = driver.FindElementsByXPath("//ytd-grid-video-renderer");
+            currentElement = 0;
+            foreach (var video in videos)
+            {
+                var subscriberName = video.FindElement(By.XPath("./div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ytd-channel-name")).Text;
+                var subscriber = subscribers.SingleOrDefault(s => s.Name == subscriberName);
+                if (subscriber != null)
+                {
+                    if (!whitelist.Contains(subscriberName.ToLower()))
+                    {
+                        RemoveElement(driver, currentElement);
+                    }
+                    else
+                    {
+                        StampElement(driver, subscriberName, currentElement);
+                        currentElement++;
+                    }
+                }
+            }
+            
+            //higher views
             driver.NavigateToUrl("https:/www.youtube.com/feed/subscriptions");
             for (int i = 0; i < rowsToIncrementOnSubPage; i++)
             {
@@ -191,6 +314,7 @@ namespace YoutubeSubscriberManager
                     }
                     else
                     {
+                        StampElement(driver, subscriberName, currentElement);
                         currentElement++;
                     }
                 }
@@ -203,6 +327,16 @@ namespace YoutubeSubscriberManager
         {
             var jse = (IJavaScriptExecutor)driver;
             jse.ExecuteScript($"return document.getElementsByTagName('ytd-grid-video-renderer')[{index}].remove();");
+        }
+
+        private static void StampElement(ChromeDriver driver, string subscriberName, int index)
+        {
+            var jse = (IJavaScriptExecutor)driver;
+
+            if(blacklist.Contains(subscriberName.ToLower()))
+                jse.ExecuteScript($"return document.getElementsByTagName('ytd-grid-video-renderer')[{index}].style.border = \"5px solid red\";");
+            if (whitelist.Contains(subscriberName.ToLower()))
+                jse.ExecuteScript($"return document.getElementsByTagName('ytd-grid-video-renderer')[{index}].style.border = \"5px solid green\";");
         }
 
         private static void ScrollToBottom(ChromeDriver driver)
