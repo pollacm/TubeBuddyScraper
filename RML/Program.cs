@@ -34,7 +34,7 @@ namespace YoutubeSubscriberManager
             "JeremiahGR".ToLower(),
             "The Nintendo Network".ToLower(),
             "SurgeTV".ToLower(),//*
-            "CoryJT".ToLower(),
+            "CoryJT".ToLower(),//
             "Dan Hundred Bankss Entertainment".ToLower(),
             "Lady Judged".ToLower(),
             "Noizey Plays".ToLower(),
@@ -43,6 +43,8 @@ namespace YoutubeSubscriberManager
             "CSN_CityGirl".ToLower(),
             "Tat Test Dummies".ToLower(),
             "I'm Norman!".ToLower(),
+            "Predator Zone Crazy".ToLower(),
+            "Orjane Cristobal".ToLower(),
         };
 
 
@@ -54,6 +56,7 @@ namespace YoutubeSubscriberManager
             "Game Boys".ToLower(), //8/32
             "SK Gowrob".ToLower(),
             "BROWEN".ToLower(), //10/32
+            "Ranscan KNRT".ToLower(),//10/10
 
         };
         private static void Main(string[] args)
